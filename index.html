@@ -126,9 +126,12 @@
       background: rgba(26, 25, 22, 0.95);
       backdrop-filter: blur(8px);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      justify-content: flex-start; /* Start from top to allow scrolling */
+      padding: 40px 24px;
+      overflow-y: auto; /* Enable vertical scroll */
+      -webkit-overflow-scrolling: touch;
     }
 
     .ob-wrap {
@@ -360,7 +363,9 @@
     #app {
       display: none;
       height: 100vh;
+      height: 100dvh; /* Dynamic viewport height for mobile */
       overflow: hidden;
+      position: relative;
     }
 
     #app.visible {
@@ -525,8 +530,10 @@
     /* ── MAIN ── */
     #main {
       flex: 1;
-      height: 100vh;
+      height: 100%;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch; /* Smooth inertia scroll for iOS */
+      position: relative;
     }
 
     .topbar {
