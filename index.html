@@ -1,0 +1,3414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Build and track your professional portfolio across teardowns, PRDs, experiments, and case competitions. Works offline." />
+  <title>Portfl — Career Portfolio</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#18181b" id="theme-meta" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Portfl" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+
+  <!-- Google Fonts removed for offline use: replaced with system font stack -->
+  <style>
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface2: #f0efe9;
+      --border: #e4e2da;
+      --border2: #d0cec4;
+      --text: #1a1916;
+      --muted: #7a7870;
+      --dim: #b8b5aa;
+      --ink: #1a1916;
+      --red: #c0392b;
+      --green: #1d6a47;
+      --blue: #1a3a6b;
+      --amber: #8a5c00;
+      --purple: #4a2570;
+    }
+
+    body.dark {
+      --bg: #18181b;
+      --surface: #1f1f23;
+      --surface2: #27272c;
+      --border: #303036;
+      --border2: #3d3d45;
+      --text: #ededef;
+      --muted: #8b8b94;
+      --dim: #55555e;
+      --ink: #ededef;
+      --red: #f06a5a;
+      --green: #4cb87e;
+      --blue: #6aa0e8;
+      --amber: #e0b040;
+      --purple: #a87ee0;
+    }
+
+    body.dark .dash-banner {
+      background: linear-gradient(135deg, #101013 0%, #171221 50%, #0b151f 100%);
+    }
+
+    body.dark .btn-ink {
+      background: #ededef;
+      color: #18181b;
+    }
+
+    body.dark .btn-ink:hover {
+      background: #d4d4d8;
+      color: #18181b;
+    }
+
+    body.dark .sb-avatar {
+      background: #ededef;
+      color: #18181b;
+    }
+
+    body.dark .sb-item.active {
+      background: #ededef;
+      color: #18181b;
+    }
+
+    body.dark .m-tag.sel {
+      background: #ededef;
+      color: #18181b;
+      border-color: #ededef;
+    }
+
+    body.dark .kpi:hover {
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark .piece-card:hover {
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark .topbar {
+      background: rgba(24, 24, 27, 0.92);
+    }
+
+    * {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── ONBOARDING ── */
+    #onboarding {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(26, 25, 22, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .ob-wrap {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .ob-logo {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a4845;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    .ob-step {
+      display: none;
+    }
+
+    .ob-step.active {
+      display: block;
+      animation: obIn 0.4s ease;
+    }
+
+    @keyframes obIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .ob-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #4a4845;
+      margin-bottom: 16px;
+    }
+
+    .ob-heading {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #f7f6f2;
+      margin-bottom: 12px;
+    }
+
+    .ob-sub {
+      font-size: 15px;
+      color: #6a6865;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    .ob-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #2e2d2a;
+      padding: 12px 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 22px;
+      color: #f7f6f2;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+
+    .ob-input::placeholder {
+      color: #2e2d2a;
+    }
+
+    .ob-input:focus {
+      border-color: #f7f6f2;
+    }
+
+    .ob-sectors {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .ob-sector {
+      border: 1px solid #2e2d2a;
+      border-radius: 8px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ob-sector:hover {
+      border-color: #6a6865;
+    }
+
+    .ob-sector.sel {
+      background: #f7f6f2;
+      border-color: #f7f6f2;
+    }
+
+    .ob-sector.sel .sec-name {
+      color: #1a1916;
+    }
+
+    .ob-sector.sel .sec-desc {
+      color: #6a6865;
+    }
+
+    .sec-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .sec-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #c8c5be;
+      transition: color 0.2s;
+    }
+
+    .sec-desc {
+      font-size: 11px;
+      color: #4a4845;
+      margin-top: 2px;
+      transition: color 0.2s;
+    }
+
+    .ob-goals {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .ob-goal {
+      border: 1px solid #2e2d2a;
+      border-radius: 8px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      color: #6a6865;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ob-goal:hover {
+      border-color: #6a6865;
+      color: #c8c5be;
+    }
+
+    .ob-goal.sel {
+      background: #f7f6f2;
+      border-color: #f7f6f2;
+      color: #1a1916;
+    }
+
+    .goal-icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .ob-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: #f7f6f2;
+      color: #1a1916;
+      border: none;
+      border-radius: 8px;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ob-btn:hover {
+      background: #e8e7e1;
+      transform: translateY(-1px);
+    }
+
+    .ob-btn-ghost {
+      background: transparent;
+      color: #4a4845;
+      border: 1px solid #2e2d2a;
+      margin-right: 12px;
+    }
+
+    .ob-btn-ghost:hover {
+      background: rgba(247, 246, 242, 0.04);
+      color: #f7f6f2;
+      transform: none;
+    }
+
+    .ob-progress {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 40px;
+    }
+
+    .ob-dot {
+      width: 24px;
+      height: 3px;
+      border-radius: 2px;
+      background: #2e2d2a;
+      transition: background 0.3s;
+    }
+
+    .ob-dot.active {
+      background: #f7f6f2;
+    }
+
+    /* ── APP ── */
+    #app {
+      display: none;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app.visible {
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 256px;
+      min-height: 100vh;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sb-top {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sb-brand {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 20px;
+    }
+
+    .sb-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sb-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .sb-name {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .sb-sector {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+    }
+
+    .sb-nav {
+      padding: 16px 12px;
+      flex: 1;
+    }
+
+    .sb-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 0 10px;
+      margin: 16px 0 6px;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.15s;
+      margin-bottom: 1px;
+      border: 1px solid transparent;
+    }
+
+    .sb-item:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .sb-item.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .si {
+      font-size: 14px;
+      width: 18px;
+      text-align: center;
+    }
+
+    .sc {
+      margin-left: auto;
+      font-size: 11px;
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      color: var(--dim);
+    }
+
+    .sb-item.active .sc {
+      color: rgba(247, 246, 242, 0.4);
+    }
+
+    .sb-foot {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sb-pl {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .sb-bar {
+      background: var(--border);
+      border-radius: 3px;
+      height: 3px;
+    }
+
+    .sb-bar-fill {
+      height: 3px;
+      border-radius: 3px;
+      background: var(--ink);
+      transition: width 0.5s;
+    }
+
+    .sb-goal-text {
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 10px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ── MAIN ── */
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(247, 246, 242, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 7px;
+      border: none;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-ink {
+      background: linear-gradient(135deg, rgb(43, 40, 56) 0%, var(--ink) 100%);
+      color: #fff;
+    }
+
+    .btn-ink:hover {
+      background: linear-gradient(135deg, rgb(58, 54, 76) 0%, #2d2c28 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(58, 54, 76, 0.25);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border2);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface2);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    /* ── QUICK ACTIONS ── */
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .qa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .qa-btn:hover {
+      border-color: var(--ink);
+      background: var(--surface2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .qa-icon {
+      font-size: 16px;
+    }
+
+    .qa-label {
+      font-size: 12px;
+    }
+
+    .qa-primary {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #fff;
+      border-color: #0f172a;
+    }
+
+    .qa-primary:hover {
+      background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.2);
+    }
+
+    /* ── NEXT STEPS ── */
+    .nextsteps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .ns-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .ns-card:not(.done):hover {
+      border-color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .ns-card.done {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .ns-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border2);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .ns-card.done .ns-check {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .ns-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .ns-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    /* ── PAGES ── */
+    .page {
+      display: none;
+      padding: 36px;
+      animation: pgIn 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes pgIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── DASHBOARD BANNER ── */
+    .dash-banner {
+      background: linear-gradient(135deg, #18181b 0%, #221c35 50%, #152230 100%);
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(17, 40, 61, 0.15);
+    }
+
+    .dash-banner::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -40px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(138, 92, 255, 0.15) 0%, rgba(26, 58, 107, 0) 70%);
+      filter: blur(24px);
+    }
+
+    .dash-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: 10%;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(76, 184, 126, 0.1) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(34px);
+      pointer-events: none;
+    }
+
+    .banner-left {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .banner-greeting {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 10px;
+    }
+
+    .banner-name {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #f0efe9;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .banner-desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      line-height: 1.65;
+      margin-top: 8px;
+      max-width: 380px;
+    }
+
+    .banner-right {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      margin-left: 24px;
+    }
+
+    .bsb {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 150px;
+      max-width: 200px;
+    }
+
+    .bsb-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .bsb-val {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #f0efe9;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .bsb-target {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+      font-style: italic;
+    }
+
+    /* ── KPI ── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .kpi:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .kpi-val {
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      font-size: 34px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .kpi-bar {
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-top: 12px;
+    }
+
+    .kpi-bar-fill {
+      height: 2px;
+      border-radius: 2px;
+      background: var(--ink);
+    }
+
+    /* ── SECTION TITLE ── */
+    .sec-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .sec-heading {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 20px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .sec-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── PIECE CARDS ── */
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pieces-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 14px;
+    }
+
+    .piece-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      cursor: pointer;
+      transition: all 0.18s;
+      animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+
+    .piece-card:hover {
+      border-color: var(--ink);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .pc-type {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+    }
+
+    .pct-teardown {
+      background: rgba(90, 143, 216, 0.12);
+      color: var(--blue);
+    }
+
+    .pct-prd {
+      background: rgba(58, 170, 114, 0.12);
+      color: var(--green);
+    }
+
+    .pct-casecomp {
+      background: rgba(154, 112, 208, 0.12);
+      color: var(--purple);
+    }
+
+    .pct-experiment {
+      background: rgba(212, 160, 48, 0.12);
+      color: var(--amber);
+    }
+
+    .pc-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .pc-product {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      margin-bottom: 8px;
+    }
+
+    .pc-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .pc-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .pc-snippets {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .pc-chip {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      margin-right: 4px;
+    }
+
+    .pc-meta-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .pc-meta-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .pc-meta-val {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .pc-exp-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .pc-exp-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    .pc-exp-a {
+      background: rgba(90, 143, 216, 0.12);
+      color: var(--blue);
+    }
+
+    .pc-exp-b {
+      background: rgba(76, 184, 126, 0.12);
+      color: var(--green);
+    }
+
+    .pc-exp-text {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pc-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .pc-date {
+      font-size: 11px;
+      color: var(--dim);
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+    }
+
+    .pc-status {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .ps-draft {
+      background: rgba(212, 160, 48, 0.12);
+      color: var(--amber);
+    }
+
+    .ps-inprogress {
+      background: rgba(90, 143, 216, 0.12);
+      color: var(--blue);
+    }
+
+    .ps-published {
+      background: rgba(58, 170, 114, 0.12);
+      color: var(--green);
+    }
+
+    .empty-card {
+      grid-column: 1/-1;
+      text-align: center;
+      border: 1.5px dashed var(--border2);
+      border-radius: 12px;
+      padding: 56px 24px;
+      background: var(--surface);
+    }
+
+    .ec-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    .empty-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .empty-card p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* ── FORM SHELL ── */
+    .form-shell {
+      max-width: 700px;
+    }
+
+    .form-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    .form-section-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1/-1;
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    input,
+    textarea,
+    select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+      -webkit-text-fill-color: var(--text);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #6aa0e8;
+      background: var(--surface);
+      box-shadow: 0 0 0 4px rgba(106, 160, 232, 0.15);
+      -webkit-text-fill-color: var(--text);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--dim);
+      -webkit-text-fill-color: var(--dim);
+      opacity: 1;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px var(--surface2) inset !important;
+      -webkit-text-fill-color: var(--text) !important;
+      transition: none !important;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 88px;
+      line-height: 1.6;
+    }
+
+    select option {
+      background: var(--surface);
+    }
+
+    /* ── WIZARD ── */
+    .wizard-bar {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .wz-step {
+      flex: 1;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--dim);
+      border-right: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .wz-step:last-child {
+      border-right: none;
+    }
+
+    .wz-step.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .wz-step.done {
+      color: var(--green);
+    }
+
+    .wz-num {
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      display: block;
+      font-size: 10px;
+      margin-bottom: 2px;
+      opacity: 0.6;
+    }
+
+    .wz-content {
+      display: none;
+    }
+
+    .wz-content.active {
+      display: block;
+      animation: pgIn 0.3s ease;
+    }
+
+    .wz-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    /* ── SUB CARDS ── */
+    .sub-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .sub-card-remove {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--dim);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .sub-card-remove:hover {
+      color: var(--red);
+    }
+
+    .int-card {
+      border-left: 3px solid var(--blue);
+    }
+
+    .prob-card {
+      border-left: 3px solid var(--red);
+    }
+
+    .sol-card {
+      border-left: 3px solid var(--green);
+    }
+
+    /* ── METRIC TAGS ── */
+    .metric-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .m-tag {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--surface);
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+    }
+
+    .m-tag:hover {
+      border-color: var(--ink);
+      color: var(--text);
+    }
+
+    .m-tag.sel {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    /* ── MODAL ── */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(26, 25, 22, 0.65);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 620px;
+      position: relative;
+      animation: pgIn 0.3s ease;
+    }
+
+    .modal-head {
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal-close-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+      color: var(--muted);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--border);
+    }
+
+    .modal-body {
+      padding: 24px 32px 28px;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .modal-section-content {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .m-chip {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      display: inline-block;
+      margin: 3px;
+    }
+
+    .modal-del {
+      padding: 14px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 10000;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 10px;
+      padding: 13px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 8px 32px rgba(26, 25, 22, 0.3);
+      transform: translateY(70px) scale(0.95);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 3px;
+    }
+
+    /* ── OFFLINE / ONLINE INDICATOR ── */
+    .connectivity-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10001;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .connectivity-bar.visible {
+      transform: translateY(0);
+    }
+
+    .connectivity-bar.offline {
+      background: linear-gradient(135deg, #7f1d1d, #991b1b);
+      color: #fecaca;
+    }
+
+    .connectivity-bar.online {
+      background: linear-gradient(135deg, #14532d, #166534);
+      color: #bbf7d0;
+    }
+
+    .connectivity-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .connectivity-bar.offline .connectivity-dot {
+      background: #fca5a5;
+      animation: pulseDot 1.5s ease-in-out infinite;
+    }
+
+    .connectivity-bar.online .connectivity-dot {
+      background: #86efac;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── UPDATE BANNER ── */
+    .update-banner {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 10002;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      animation: slideDownFade 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 360px;
+    }
+
+    .update-banner.visible {
+      display: flex;
+    }
+
+    @keyframes slideDownFade {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HAMBURGER (MOBILE) ── */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .hamburger:hover {
+      background: var(--surface2);
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.visible {
+      display: block;
+    }
+
+    /* ── PWA STANDALONE PADDING ── */
+    @media (display-mode: standalone) {
+      body {
+        padding-top: env(safe-area-inset-top);
+      }
+
+      .topbar {
+        padding-top: calc(10px + env(safe-area-inset-top));
+      }
+
+      .connectivity-bar {
+        padding-top: calc(8px + env(safe-area-inset-top));
+      }
+    }
+
+    /* ── MOBILE RESPONSIVENESS ── */
+    @media (max-width: 768px) {
+      #app.visible {
+        flex-direction: column;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      #sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: none;
+        width: 280px;
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+        box-shadow: 8px 0 32px rgba(0, 0, 0, 0.3);
+      }
+
+      #main {
+        width: 100%;
+        height: 100vh;
+      }
+
+      .topbar {
+        padding: 12px 16px;
+      }
+
+      .topbar-title {
+        font-size: 18px;
+      }
+
+      .page {
+        padding: 20px 16px;
+      }
+
+      .dash-banner {
+        flex-direction: column;
+        padding: 24px 20px;
+        gap: 16px;
+      }
+
+      .banner-right {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .bsb {
+        max-width: 100%;
+      }
+
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .pieces-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: 1;
+      }
+
+      .ob-heading {
+        font-size: 32px;
+      }
+
+      .ob-sectors {
+        grid-template-columns: 1fr;
+      }
+
+      .wizard-bar {
+        flex-wrap: wrap;
+      }
+
+      .wz-step {
+        flex: 1 1 30%;
+        padding: 8px 4px;
+        font-size: 11px;
+      }
+
+      .modal-box {
+        max-width: 100%;
+        border-radius: 12px;
+      }
+
+      .modal-head {
+        padding: 20px;
+      }
+
+      .modal-body {
+        padding: 16px 20px;
+      }
+
+      .banner-name {
+        font-size: 28px;
+      }
+
+      .quick-actions {
+        flex-wrap: wrap;
+      }
+
+      .qa-btn {
+        flex: 1 1 45%;
+        justify-content: center;
+      }
+
+      .nextsteps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-del {
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 20px;
+      }
+
+      .modal-del > div {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .modal-del .btn {
+        flex: 1;
+        justify-content: center;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .kpi-row {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-val {
+        font-size: 28px;
+      }
+
+      .ob-heading {
+        font-size: 26px;
+      }
+
+      .qa-btn {
+        flex: 1 1 100%;
+      }
+    }
+
+    /* ── GET APP PAGE ── */
+    #page-get-app {
+      display: none;
+      padding: 40px 24px;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #page-get-app.active {
+      display: block;
+    }
+
+    .ga-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .ga-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ga-steps {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0;
+    }
+
+    .ga-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .ga-step-num {
+      background: var(--ink);
+      color: var(--bg);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ga-icon-box {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    @media (max-width: 768px) {
+      #page-get-app { padding: 20px 16px 80px; }
+    }
+
+    /* ── GET APP PAGE ── */
+    #page-get-app {
+      display: none;
+      padding: 40px 24px;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #page-get-app.active {
+      display: block;
+    }
+
+    .ga-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .ga-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ga-steps {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0;
+    }
+
+    .ga-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .ga-step-num {
+      background: var(--ink);
+      color: var(--bg);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ga-icon-box {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    @media (max-width: 768px) {
+      #page-get-app { padding: 20px 16px 80px; }
+    }
+
+    /* ── BOTTOM NAV BAR (MOBILE) ── */
+    .bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      height: 64px;
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 9998;
+      align-items: center;
+      justify-content: space-around;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+    }
+
+    .bn-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 12px;
+      transition: all 0.2s;
+    }
+
+    .bn-item.active {
+      color: var(--ink);
+    }
+
+    .bn-icon {
+      font-size: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-bar { display: flex; }
+      body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+      #sidebar { display: none; } /* On mobile, only show when manually toggled */
+      #sidebar.open { display: flex; }
+      
+      .top-bar {
+        padding: 12px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+      }
+      
+      /* Shift install banner up if bottom bar exists */
+      body.has-install-banner #install-banner {
+        bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+
+    /* ── INSTALL BANNER MOBILE FIX ── */
+    body.has-install-banner .page {
+      padding-bottom: 20px; /* Reduced since bottom bar handles height */
+    }
+
+    body.has-install-banner .wz-nav {
+      bottom: calc(64px + env(safe-area-inset-bottom));
+    }
+
+    body.has-install-banner .form-shell > .btn {
+      margin-bottom: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ CONNECTIVITY BAR ══ -->
+  <div class="connectivity-bar" id="connectivity-bar">
+    <span class="connectivity-dot"></span>
+    <span id="connectivity-text">You are offline</span>
+  </div>
+
+  <!-- ══ UPDATE BANNER ══ -->
+  <div class="update-banner" id="update-banner">
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:700;color:var(--text)">Update Available</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">A new version of Portfl is ready</div>
+    </div>
+    <button onclick="location.reload()" style="padding:8px 16px;background:var(--ink);color:var(--bg);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">Refresh</button>
+    <button onclick="document.getElementById('update-banner').classList.remove('visible')" style="padding:4px 8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1">×</button>
+  </div>
+
+  <!-- ══ ONBOARDING ══ -->
+  <!-- ══ BOTTOM NAV (MOBILE ONLY) ══ -->
+  <div class="bottom-bar">
+    <div class="bn-item active" id="bn-dash" onclick="nav('dashboard')">
+      <span class="bn-icon">⚡</span>
+      <span>Dashboard</span>
+    </div>
+    <div class="bn-item" id="bn-port" onclick="nav('portfolio')">
+      <span class="bn-icon">📁</span>
+      <span>Portfolio</span>
+    </div>
+    <div class="bn-item" onclick="nav('new-teardown')">
+      <div style="background:var(--ink);color:var(--bg);width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:2px">
+        <span style="font-size:18px;font-weight:700">+</span>
+      </div>
+      <span>Add Work</span>
+    </div>
+    <div class="bn-item" onclick="toggleSidebar()">
+      <span class="bn-icon">☰</span>
+      <span>Menu</span>
+    </div>
+  </div>
+
+  <div id="onboarding">
+    <div class="ob-wrap">
+      <div class="ob-logo">Portfl — Career Portfolio</div>
+      <div class="ob-progress">
+        <div class="ob-dot active" id="od0"></div>
+        <div class="ob-dot" id="od1"></div>
+        <div class="ob-dot" id="od2"></div>
+        <div class="ob-dot" id="od3"></div>
+      </div>
+
+      <!-- 1: Name -->
+      <div class="ob-step active" id="obs-0">
+        <div class="ob-eyebrow">Step 1 of 4</div>
+        <div class="ob-heading">What's your<br />name?</div>
+        <div class="ob-sub">This personalises your workspace and portfolio header.</div>
+        <input class="ob-input" id="ob-name" placeholder="Your full name" maxlength="60" autocomplete="off"
+          onkeydown="if(event.key==='Enter') obNext(0)" />
+        <button class="ob-btn" onclick="obNext(0)">Continue →</button>
+      </div>
+
+      <!-- 2: Sector -->
+      <div class="ob-step" id="obs-1">
+        <div class="ob-eyebrow">Step 2 of 4</div>
+        <div class="ob-heading">Primary<br />sector</div>
+        <div class="ob-sub">Select the track you are building towards. Depth in one sector will always outperform spread
+          across many.</div>
+        <div class="ob-sectors">
+          <div class="ob-sector" data-val="Product Management" onclick="selectSector(this)"><span
+              class="sec-icon">📦</span>
+            <div class="sec-name">Product Management</div>
+            <div class="sec-desc">PM, APM roles</div>
+          </div>
+          <div class="ob-sector" data-val="Investment Banking" onclick="selectSector(this)"><span
+              class="sec-icon">📈</span>
+            <div class="sec-name">Investment Banking</div>
+            <div class="sec-desc">IB, M&amp;A, Capital Markets</div>
+          </div>
+          <div class="ob-sector" data-val="Consulting" onclick="selectSector(this)"><span class="sec-icon">🧩</span>
+            <div class="sec-name">Consulting</div>
+            <div class="sec-desc">Strategy, MBB, Big 4</div>
+          </div>
+          <div class="ob-sector" data-val="Equity Research" onclick="selectSector(this)"><span
+              class="sec-icon">🔬</span>
+            <div class="sec-name">Equity Research</div>
+            <div class="sec-desc">ER, Asset Management</div>
+          </div>
+          <div class="ob-sector" data-val="Software Engineering" onclick="selectSector(this)"><span
+              class="sec-icon">💻</span>
+            <div class="sec-name">Software Engineering</div>
+            <div class="sec-desc">SWE, Infra, Backend</div>
+          </div>
+          <div class="ob-sector" data-val="General Management" onclick="selectSector(this)"><span
+              class="sec-icon">🎯</span>
+            <div class="sec-name">General Management</div>
+            <div class="sec-desc">Operations, Strategy</div>
+          </div>
+        </div>
+        <button class="ob-btn ob-btn-ghost" onclick="obPrev(1)">← Back</button>
+        <button class="ob-btn" onclick="obNext(1)">Continue →</button>
+      </div>
+
+      <!-- 3: Target -->
+      <div class="ob-step" id="obs-2">
+        <div class="ob-eyebrow">Step 3 of 4</div>
+        <div class="ob-heading">Your career<br />target</div>
+        <div class="ob-sub">Where do you want to be upon graduating or completing your current programme?</div>
+        <input class="ob-input" id="ob-target" placeholder="e.g. APM at a Series B startup by 2027" maxlength="100"
+          autocomplete="off" onkeydown="if(event.key==='Enter') obNext(2)" />
+        <button class="ob-btn ob-btn-ghost" onclick="obPrev(2)">← Back</button>
+        <button class="ob-btn" onclick="obNext(2)">Continue →</button>
+      </div>
+
+      <!-- 4: Focus -->
+      <div class="ob-step" id="obs-3">
+        <div class="ob-eyebrow">Step 4 of 4</div>
+        <div class="ob-heading">Primary<br />focus</div>
+        <div class="ob-sub">What are you here to accomplish with this workspace?</div>
+        <div class="ob-goals">
+          <div class="ob-goal" data-val="Build a portfolio from scratch" onclick="selectGoal(this)"><span
+              class="goal-icon">🧱</span> Build a portfolio from scratch</div>
+          <div class="ob-goal" data-val="Document internship and project work" onclick="selectGoal(this)"><span
+              class="goal-icon">📝</span> Document internship and project work</div>
+          <div class="ob-goal" data-val="Prepare for campus placements" onclick="selectGoal(this)"><span
+              class="goal-icon">🎓</span> Prepare for campus placements</div>
+          <div class="ob-goal" data-val="Sharpen product thinking and frameworks" onclick="selectGoal(this)"><span
+              class="goal-icon">🔍</span> Sharpen product thinking and frameworks</div>
+          <div class="ob-goal" data-val="Track progress across multiple tracks" onclick="selectGoal(this)"><span
+              class="goal-icon">📊</span> Track progress across multiple tracks</div>
+        </div>
+        <button class="ob-btn ob-btn-ghost" onclick="obPrev(3)">← Back</button>
+        <button class="ob-btn" onclick="obFinish()">Enter Workspace →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ APP ══ -->
+  <div id="app">
+    <nav id="sidebar">
+      <div class="sb-top">
+        <div class="sb-brand">Portfl</div>
+        <div class="sb-user">
+          <div class="sb-avatar" id="sb-av">?</div>
+          <div>
+            <div class="sb-name" id="sb-name">—</div>
+            <div class="sb-sector" id="sb-sec">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-label">Overview</div>
+        <div class="sb-item active" onclick="nav('dashboard')"><span class="si">⚡</span> Dashboard</div>
+        <div class="sb-item" onclick="nav('portfolio')"><span class="si">🗂</span> Portfolio <span class="sc" id="pc-count">0</span></div>
+        <div class="sb-item" onclick="nav('get-app')" style="margin-top: 8px; color: var(--ink); font-weight: 700;">
+          <span class="si">📲</span> Download App
+        </div>
+        <div class="sb-label" id="sb-add-label">Add Work</div>
+        <div id="sb-add-items"></div>
+      </div>
+      <div class="sb-foot">
+        <div class="sb-pl"><span>Completeness</span><span id="comp-pct"
+            style="font-family:'Menlo','Consolas','Courier New',monospace">0%</span></div>
+        <div class="sb-bar">
+          <div class="sb-bar-fill" id="comp-bar" style="width:0%"></div>
+        </div>
+        <div class="sb-goal-text" id="sb-goal">—</div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-ghost btn-sm" style="flex:1;font-size:11px" onclick="openSettings()">⚙ Edit
+            preferences</button>
+          <button class="btn btn-ghost btn-sm" id="theme-btn" style="font-size:15px;padding:6px 10px"
+            onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+        </div>
+      </div>
+    </nav>
+
+    <div id="main">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
+          <div class="topbar-title" id="page-title">Dashboard</div>
+        </div>
+        <div class="topbar-actions"><button class="btn btn-ink" onclick="nav('new-teardown')">+ Add Work</button></div>
+      </div>
+      <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="dash-banner">
+          <div class="banner-left">
+            <div class="banner-greeting" id="b-greet">Welcome</div>
+            <div class="banner-name" id="b-name">—</div>
+            <div class="banner-desc" id="b-desc"></div>
+          </div>
+          <div class="banner-right">
+            <div class="bsb">
+              <div class="bsb-label">Primary Sector</div>
+              <div class="bsb-val" id="b-sector">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label" id="kl-td">Teardowns</div>
+            <div class="kpi-val" id="k-td">0</div>
+            <div class="kpi-bar">
+              <div class="kpi-bar-fill" id="kb-td" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label" id="kl-prd">PRDs</div>
+            <div class="kpi-val" id="k-prd">0</div>
+            <div class="kpi-bar">
+              <div class="kpi-bar-fill" id="kb-prd" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label" id="kl-cc">Case Comps</div>
+            <div class="kpi-val" id="k-cc">0</div>
+            <div class="kpi-bar">
+              <div class="kpi-bar-fill" id="kb-cc" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label" id="kl-ex">Experiments</div>
+            <div class="kpi-val" id="k-ex">0</div>
+            <div class="kpi-bar">
+              <div class="kpi-bar-fill" id="kb-ex" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="sec-row" style="margin-bottom:12px">
+          <div class="sec-heading">Quick Add</div>
+          <div class="sec-line"></div>
+        </div>
+        <div class="quick-actions" id="quick-actions"></div>
+
+        <!-- Next Steps checklist -->
+        <div class="sec-row" style="margin-top:28px;margin-bottom:12px">
+          <div class="sec-heading">Next Steps</div>
+          <div class="sec-line"></div>
+        </div>
+        <div class="nextsteps-grid" id="nextsteps-grid"></div>
+
+        <!-- Recent Work -->
+        <div class="sec-row" style="margin-top:28px">
+          <div class="sec-heading">Recent Work</div>
+          <div class="sec-line"></div>
+          <button class="btn btn-ghost btn-sm" onclick="nav('portfolio')">View all</button>
+        </div>
+        <div class="pieces-grid" id="recent-grid">
+          <div class="empty-card">
+            <div class="ec-icon">📂</div>
+            <h3>No entries yet</h3>
+            <p id="empty-cta-text">Begin with a product teardown to populate your portfolio.</p><button
+              class="btn btn-ink" id="empty-cta-btn" onclick="nav('new-teardown')">Start a Teardown →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET APP -->
+      <div class="page" id="page-get-app">
+        <div class="ga-icon-box">📲</div>
+        <h2 class="ob-heading">Get Portfl on your device</h2>
+        <p style="color:var(--muted);margin-top:12px">Install Portfl to use it full-screen and offline, just like a native app.</p>
+
+        <div class="ga-card">
+          <div class="ga-title">💻 Laptop / Desktop</div>
+          <p style="font-size:13px;color:var(--muted)">Best for Chrome or Edge browsers.</p>
+          <ul class="ga-steps">
+            <li class="ga-step"><div class="ga-step-num">1</div><span>Look at the right side of your <b>address bar</b>.</span></li>
+            <li class="ga-step"><div class="ga-step-num">2</div><span>Click the <b>Install icon</b> (it looks like a screen with a down arrow).</span></li>
+            <li class="ga-step"><div class="ga-step-num">3</div><span>Click <b>"Install"</b> in the popup.</span></li>
+          </ul>
+        </div>
+
+        <div class="ga-card">
+          <div class="ga-title">📱 Mobile (Android/iOS)</div>
+          <p style="font-size:13px;color:var(--muted)">Best for Chrome or Safari.</p>
+          <ul class="ga-steps">
+            <li class="ga-step"><div class="ga-step-num">!</div><span>If you see an <b>"Install Portfl"</b> banner at the bottom, just tap the Install button.</span></li>
+            <li class="ga-step"><div class="ga-step-num">1</div><span><b>On iOS:</b> Tap the <b>Share</b> icon (square with arrow) and select <b>"Add to Home Screen"</b>.</span></li>
+            <li class="ga-step"><div class="ga-step-num">2</div><span><b>On Android:</b> Tap the <b>three dots (⋮)</b> and select <b>"Install app"</b>.</span></li>
+          </ul>
+        </div>
+        
+        <div style="margin-top:32px; display:flex; flex-direction:column; gap:12px">
+          <button class="btn btn-ink" id="manual-install-btn" onclick="installApp()" style="display:none; width:100%">Install Portfl Now →</button>
+          <button class="btn btn-outline" style="width:100%" onclick="history.back()">Back to App</button>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO -->
+      <div class="page" id="page-portfolio">
+        <div class="pieces-grid" id="portfolio-grid">
+          <div class="empty-card">
+            <div class="ec-icon">🗂</div>
+            <h3>Portfolio is empty</h3>
+            <p>Add teardowns, PRDs, experiments, and case competitions to build your record.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW TEARDOWN -->
+      <div class="page" id="page-new-teardown">
+        <div class="form-shell">
+          <div class="wizard-bar" id="td-wiz">
+            <div class="wz-step active"><span class="wz-num">01</span>Product</div>
+            <div class="wz-step"><span class="wz-num">02</span>Journey</div>
+            <div class="wz-step"><span class="wz-num">03</span>Interviews</div>
+            <div class="wz-step"><span class="wz-num">04</span>Problems</div>
+            <div class="wz-step"><span class="wz-num">05</span>Solutions</div>
+            <div class="wz-step"><span class="wz-num">06</span>Metrics</div>
+          </div>
+
+          <div class="wz-content active" id="td-s0">
+            <div class="form-section">
+              <div class="form-section-title">📦 Product basics</div>
+              <div class="form-grid">
+                <div class="form-group"><label>Product Name *</label><input id="td-product"
+                    placeholder="e.g. Groww, Zepto, Splitwise" /></div>
+                <div class="form-group"><label>Category</label><select id="td-cat">
+                    <option>Fintech</option>
+                    <option>E-commerce</option>
+                    <option>SaaS / B2B</option>
+                    <option>Social</option>
+                    <option>Productivity</option>
+                    <option>Health</option>
+                    <option>EdTech</option>
+                    <option>Other</option>
+                  </select></div>
+                <div class="form-group full"><label>Core Job (one sentence) *</label><input id="td-job"
+                    placeholder="What is this product hired to do?" /></div>
+                <div class="form-group full"><label>Why this product?</label><textarea id="td-why"
+                    placeholder="Personal usage, interesting problem space, underserved users..."></textarea></div>
+                <div class="form-group"><label>Target User Segment</label><input id="td-userseg"
+                    placeholder="e.g. First-time investors, college students" /></div>
+                <div class="form-group"><label>Platform</label><select id="td-platform">
+                    <option>Mobile (iOS/Android)</option>
+                    <option>Web</option>
+                    <option>Both</option>
+                    <option>Desktop</option>
+                  </select></div>
+              </div>
+            </div>
+            <div class="wz-nav"><button class="btn btn-ink" onclick="tdNext(0)">Next →</button></div>
+          </div>
+
+          <div class="wz-content" id="td-s1">
+            <div class="form-section">
+              <div class="form-section-title">🗺 User journey</div>
+              <div class="form-group" style="margin-bottom:16px"><label>Map the key screens and steps</label><textarea
+                  id="td-journey" style="min-height:120px"
+                  placeholder="1. Onboarding / sign-up&#10;2. Home screen&#10;3. Core action&#10;...&#10;&#10;Note where users slow down or drop off."></textarea>
+              </div>
+              <div class="form-group"><label>Friction points observed</label><textarea id="td-friction"
+                  placeholder="e.g. SIP setup buried 3 taps deep under 'Explore', causing users to miss the core feature."></textarea>
+              </div>
+            </div>
+            <div class="wz-nav"><button class="btn btn-ghost" onclick="tdPrev(1)">← Back</button><button
+                class="btn btn-ink" onclick="tdNext(1)">Next →</button></div>
+          </div>
+
+          <div class="wz-content" id="td-s2">
+            <div class="form-section">
+              <div class="form-section-title">🎙 User interviews <span
+                  style="font-size:13px;font-weight:400;color:var(--muted);margin-left:6px">Target: 5 real users</span>
+              </div>
+              <div id="int-list"></div>
+              <button class="btn btn-outline" onclick="addInterview()" style="margin-top:4px">+ Add interview</button>
+            </div>
+            <div class="wz-nav"><button class="btn btn-ghost" onclick="tdPrev(2)">← Back</button><button
+                class="btn btn-ink" onclick="tdNext(2)">Next →</button></div>
+          </div>
+
+          <div class="wz-content" id="td-s3">
+            <div class="form-section">
+              <div class="form-section-title">⚠️ Problems identified <span
+                  style="font-size:13px;font-weight:400;color:var(--muted);margin-left:6px">2–3 specific, evidenced
+                  problems</span></div>
+              <div id="prob-list"></div>
+              <button class="btn btn-outline" onclick="addProblem()" style="margin-top:4px">+ Add problem</button>
+            </div>
+            <div class="wz-nav"><button class="btn btn-ghost" onclick="tdPrev(3)">← Back</button><button
+                class="btn btn-ink" onclick="tdNext(3)">Next →</button></div>
+          </div>
+
+          <div class="wz-content" id="td-s4">
+            <div class="form-section">
+              <div class="form-section-title">💡 Proposed solutions <span
+                  style="font-size:13px;font-weight:400;color:var(--muted);margin-left:6px">Include tradeoffs</span>
+              </div>
+              <div id="sol-list"></div>
+              <button class="btn btn-outline" onclick="addSolution()" style="margin-top:4px">+ Add solution</button>
+            </div>
+            <div class="wz-nav"><button class="btn btn-ghost" onclick="tdPrev(4)">← Back</button><button
+                class="btn btn-ink" onclick="tdNext(4)">Next →</button></div>
+          </div>
+
+          <div class="wz-content" id="td-s5">
+            <div class="form-section">
+              <div class="form-section-title">📊 Success metrics</div>
+              <div class="form-group" style="margin-bottom:18px"><label>North Star Metric</label><input id="td-north"
+                  placeholder="e.g. Weekly Active Investors, DAU/MAU ratio..." /></div>
+              <div class="form-group" style="margin-bottom:18px"><label>Supporting Metrics</label>
+                <div class="metric-tags" id="metric-tags">
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Retention D7</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Retention D30</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Conversion Rate</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Session Length</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Funnel Drop-off</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">NPS</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Feature Adoption</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Time to First Value</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Churn Rate</span>
+                  <span class="m-tag" onclick="this.classList.toggle('sel')">Revenue per User</span>
+                </div>
+              </div>
+              <div class="form-group"><label>Status</label><select id="td-status">
+                  <option value="inprogress">In Progress</option>
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select></div>
+            </div>
+            <div class="wz-nav"><button class="btn btn-ghost" onclick="tdPrev(5)">← Back</button><button
+                class="btn btn-ink" onclick="saveTeardown()">✓ Save to Portfolio</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW PRD -->
+      <div class="page" id="page-new-prd">
+        <div class="form-shell">
+          <div class="form-section">
+            <div class="form-section-title">📋 Product Requirements Document</div>
+            <div class="form-grid">
+              <div class="form-group"><label>PRD Title *</label><input id="prd-title"
+                  placeholder="e.g. Groww Social Investing Feature" /></div>
+              <div class="form-group"><label>Product / Company</label><input id="prd-product"
+                  placeholder="e.g. Groww" /></div>
+              <div class="form-group full"><label>Problem Statement *</label><textarea id="prd-problem"
+                  placeholder="What problem are you solving, and for whom?"></textarea></div>
+              <div class="form-group full"><label>User Personas</label><input id="prd-personas"
+                  placeholder="e.g. First-time investor, Experienced trader, Parent investing for child" /></div>
+              <div class="form-group"><label>Success Metrics</label><textarea id="prd-metrics"
+                  placeholder="How will you measure whether this worked?"></textarea></div>
+              <div class="form-group"><label>In Scope (v1)</label><textarea id="prd-scope"
+                  placeholder="What is included?"></textarea></div>
+              <div class="form-group full"><label>Out of Scope</label><input id="prd-outscope"
+                  placeholder="What are you explicitly not building?" /></div>
+              <div class="form-group"><label>Status</label><select id="prd-status">
+                  <option value="draft">Draft</option>
+                  <option value="inprogress">In Progress</option>
+                  <option value="published">Published</option>
+                </select></div>
+            </div>
+          </div>
+          <button class="btn btn-ink" onclick="savePRD()">✓ Save PRD to Portfolio</button>
+        </div>
+      </div>
+
+      <!-- NEW EXPERIMENT -->
+      <div class="page" id="page-new-experiment">
+        <div class="form-shell">
+          <div class="form-section">
+            <div class="form-section-title">🧪 A/B Experiment</div>
+            <div class="form-grid">
+              <div class="form-group"><label>Experiment Name *</label><input id="exp-title"
+                  placeholder="e.g. Homepage CTA Button A/B Test" /></div>
+              <div class="form-group"><label>Product / Context</label><input id="exp-product"
+                  placeholder="e.g. Club website, Campus org app" /></div>
+              <div class="form-group full"><label>Hypothesis *</label><textarea id="exp-hypothesis"
+                  placeholder="If we [change X], then [metric Y] will [increase/decrease] because [reason]..."></textarea>
+              </div>
+              <div class="form-group"><label>Control (A)</label><textarea id="exp-control"
+                  placeholder="The current state."></textarea></div>
+              <div class="form-group"><label>Variant (B)</label><textarea id="exp-variant"
+                  placeholder="What you changed."></textarea></div>
+              <div class="form-group"><label>Primary Metric</label><input id="exp-metric"
+                  placeholder="e.g. Click-through rate, Sign-up conversion" /></div>
+              <div class="form-group"><label>Outcome</label><select id="exp-result">
+                  <option value="inprogress">Running</option>
+                  <option value="draft">Inconclusive</option>
+                  <option value="published">Variant Won</option>
+                </select></div>
+              <div class="form-group full"><label>Key Learnings</label><textarea id="exp-learnings"
+                  placeholder="What did you learn? What would you do differently?"></textarea></div>
+            </div>
+          </div>
+          <button class="btn btn-ink" onclick="saveExperiment()">✓ Save Experiment</button>
+        </div>
+      </div>
+
+      <!-- CASE COMP -->
+      <div class="page" id="page-new-casecomp">
+        <div class="form-shell">
+          <div class="form-section">
+            <div class="form-section-title">🏆 Case Competition</div>
+            <div class="form-grid">
+              <div class="form-group"><label>Competition Name *</label><input id="cc-title"
+                  placeholder="e.g. BCG Open Case, Consult-a-thon 2025" /></div>
+              <div class="form-group"><label>Organiser / Sponsor</label><input id="cc-org"
+                  placeholder="e.g. BCG, Amazon, IIT Bombay" /></div>
+              <div class="form-group full"><label>Problem Statement</label><textarea id="cc-problem"
+                  placeholder="What was the case problem?"></textarea></div>
+              <div class="form-group full"><label>Approach &amp; Recommendation</label><textarea id="cc-solution"
+                  placeholder="Framework used, key analyses, final recommendation..."></textarea></div>
+              <div class="form-group"><label>Result / Placement</label><input id="cc-result"
+                  placeholder="e.g. Top 10, Finalist, Winner" /></div>
+              <div class="form-group"><label>Team Size</label><select id="cc-team">
+                  <option>Solo</option>
+                  <option>2 members</option>
+                  <option>3 members</option>
+                  <option>4 members</option>
+                </select></div>
+              <div class="form-group full"><label>Key Learnings</label><textarea id="cc-learnings"
+                  placeholder="What did you learn about structuring business problems?"></textarea></div>
+            </div>
+          </div>
+          <button class="btn btn-ink" onclick="saveCaseComp()">✓ Save to Portfolio</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DETAIL MODAL -->
+  <div class="modal-bg" id="detail-modal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <div id="m-badge" style="margin-bottom:8px"></div>
+          <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;line-height:1.2"
+            id="m-title">—</div>
+          <div
+            style="font-size:12px;color:var(--muted);margin-top:6px;font-family:'Menlo','Consolas','Courier New',monospace"
+            id="m-meta">—</div>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="m-body"></div>
+      <div class="modal-del"><button class="btn btn-ghost btn-sm" id="m-del">Delete entry</button></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-bg" id="settings-modal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;line-height:1.2">Preferences</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;font-family:'Menlo','Consolas','Courier New',monospace">Edit your workspace details</div>
+        </div>
+        <button class="modal-close-btn" onclick="document.getElementById('settings-modal').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group full"><label>Name</label><input id="set-name" /></div>
+          <div class="form-group full"><label>Primary Sector</label>
+            <select id="set-sector">
+              <option value="Product Management">Product Management</option>
+              <option value="Investment Banking">Investment Banking</option>
+              <option value="Consulting">Consulting</option>
+              <option value="Equity Research">Equity Research</option>
+              <option value="Software Engineering">Software Engineering</option>
+              <option value="General Management">General Management</option>
+            </select>
+          </div>
+          <div class="form-group full"><label>Career Target</label><input id="set-target" /></div>
+          <div class="form-group full"><label>Primary Focus</label>
+            <select id="set-goal">
+              <option value="Build a portfolio from scratch">Build a portfolio from scratch</option>
+              <option value="Document internship and project work">Document internship and project work</option>
+              <option value="Prepare for campus placements">Prepare for campus placements</option>
+              <option value="Sharpen product thinking and frameworks">Sharpen product thinking and frameworks</option>
+              <option value="Track progress across multiple tracks">Track progress across multiple tracks</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-del" style="justify-content: space-between; align-items: center;">
+         <div style="display: flex; gap: 10px;">
+           <button class="btn btn-outline" onclick="exportData()">Export JSON ↓</button>
+           <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">Import JSON ↑</button>
+           <input type="file" id="import-file" style="display:none" accept=".json" onchange="importData(event)" />
+         </div>
+         <button class="btn btn-ink" onclick="saveSettings()">Save changes ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><span id="toast-msg">Saved</span></div>
+
+  <script>
+    let user = JSON.parse(localStorage.getItem('portfl_user') || 'null');
+    let portfolio = JSON.parse(localStorage.getItem('portfl_portfolio') || '[]');
+    let obStep = 0, selectedSector = '', selectedGoal = '', tdStepN = 0;
+
+    // ── ONBOARDING ──────────────────────────────────────────────────────────────
+    function obShowStep(n) {
+      obStep = n;
+      document.querySelectorAll('.ob-step').forEach((el, i) => el.classList.toggle('active', i === n));
+      document.querySelectorAll('.ob-dot').forEach((el, i) => el.classList.toggle('active', i <= n));
+    }
+    function obNext(n) {
+      if (n === 0 && !document.getElementById('ob-name').value.trim()) { document.getElementById('ob-name').focus(); return; }
+      if (n === 1 && !selectedSector) { toast('Please select a sector'); return; }
+      if (n === 2 && !document.getElementById('ob-target').value.trim()) { document.getElementById('ob-target').focus(); return; }
+      obShowStep(n + 1);
+    }
+    function obPrev(n) { obShowStep(n - 1); }
+    function selectSector(el) { document.querySelectorAll('.ob-sector').forEach(s => s.classList.remove('sel')); el.classList.add('sel'); selectedSector = el.dataset.val; }
+    function selectGoal(el) { document.querySelectorAll('.ob-goal').forEach(g => g.classList.remove('sel')); el.classList.add('sel'); selectedGoal = el.dataset.val; }
+    function exportData() {
+      const data = { user, portfolio };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'portfl_backup.json'; a.click();
+      URL.revokeObjectURL(url);
+      toast('Data exported');
+    }
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          const d = JSON.parse(ev.target.result);
+          if (d.user && d.portfolio) {
+            user = d.user; portfolio = d.portfolio;
+            localStorage.setItem('portfl_user', JSON.stringify(user));
+            localStorage.setItem('portfl_portfolio', JSON.stringify(portfolio));
+            applyUser(); renderDashboard();
+            toast('Data imported successfully');
+            document.getElementById('settings-modal').classList.remove('open');
+          } else { toast('Invalid backup file'); }
+        } catch(err) { toast('Error parsing file'); }
+      };
+      reader.readAsText(file);
+    }
+    function obFinish() {
+      if (!selectedGoal) { toast('Please select a focus'); return; }
+      user = { name: document.getElementById('ob-name').value.trim(), sector: selectedSector, target: document.getElementById('ob-target').value.trim(), goal: selectedGoal };
+      localStorage.setItem('portfl_user', JSON.stringify(user));
+      document.getElementById('onboarding').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      applyUser(); renderDashboard();
+      toast('Preferences saved \u2713');
+    }
+
+    function openSettings() {
+      if (user) {
+        document.getElementById('set-name').value = user.name || '';
+        document.getElementById('set-sector').value = user.sector || 'Product Management';
+        document.getElementById('set-target').value = user.target || '';
+        document.getElementById('set-goal').value = user.goal || 'Build a portfolio from scratch';
+      }
+      document.getElementById('settings-modal').classList.add('open');
+    }
+
+    function saveSettings() {
+      const name = document.getElementById('set-name').value.trim();
+      const sector = document.getElementById('set-sector').value;
+      const target = document.getElementById('set-target').value.trim();
+      const goal = document.getElementById('set-goal').value;
+
+      if (!name || !target) {
+        toast('Please fill in your name and target');
+        return;
+      }
+
+      user = { name, sector, target, goal };
+      localStorage.setItem('portfl_user', JSON.stringify(user));
+      applyUser();
+      renderDashboard(); // Re-render to show correct KPI names, steps
+      document.getElementById('settings-modal').classList.remove('open');
+      toast('Preferences updated \u2713');
+    }
+
+    // ── SECTOR CONFIG ────────────────────────────────────────────────────────────
+    const sectorConfig = {
+      'Product Management': {
+        desc: 'Build structured evidence of product thinking — teardowns, PRDs, and experiments that demonstrate how you identify problems, prioritise solutions, and measure impact.',
+        kpis: [
+          { label: 'Teardowns', target: 3 }, { label: 'PRDs', target: 2 },
+          { label: 'Case Comps', target: 1 }, { label: 'Experiments', target: 2 }
+        ]
+      },
+      'Investment Banking': {
+        desc: 'Document deal exposure, financial modelling work, and case competitions that show your ability to analyse businesses, structure transactions, and communicate under pressure.',
+        kpis: [
+          { label: 'Deal / Model Cases', target: 3 }, { label: 'Pitch Decks', target: 2 },
+          { label: 'Case Comps', target: 2 }, { label: 'Research Notes', target: 2 }
+        ]
+      },
+      'Consulting': {
+        desc: 'Track case competition performance, client projects, and frameworks you have applied — your record of structured problem-solving and recommendation quality.',
+        kpis: [
+          { label: 'Case Comps', target: 4 }, { label: 'Client Projects', target: 2 },
+          { label: 'Frameworks Used', target: 3 }, { label: 'Presentations', target: 2 }
+        ]
+      },
+      'Equity Research': {
+        desc: 'Build a body of investment memos, sector coverage notes, and model walkthroughs that demonstrate your ability to form and defend a view on a business.',
+        kpis: [
+          { label: 'Investment Memos', target: 3 }, { label: 'Sector Notes', target: 3 },
+          { label: 'Model Walkthroughs', target: 2 }, { label: 'Case Comps', target: 1 }
+        ]
+      },
+      'Software Engineering': {
+        desc: 'Catalogue your projects, system designs, and experiments — showing not just what you built but the problem it solved, the tradeoffs you navigated, and what you learned.',
+        kpis: [
+          { label: 'Projects Built', target: 3 }, { label: 'System Designs', target: 2 },
+          { label: 'Case Comps', target: 1 }, { label: 'Experiments', target: 2 }
+        ]
+      },
+      'General Management': {
+        desc: 'Record leadership initiatives, cross-functional projects, and strategic decisions that demonstrate ownership, adaptability, and the ability to drive outcomes across teams.',
+        kpis: [
+          { label: 'Initiatives Led', target: 3 }, { label: 'Strategy Docs', target: 2 },
+          { label: 'Case Comps', target: 2 }, { label: 'Experiments', target: 1 }
+        ]
+      }
+    };
+    const goalConfig = {
+      'Build a portfolio from scratch': { mult: 1, text: 'Focus: Getting your foundational pieces in place.' },
+      'Document internship and project work': { mult: 0.5, text: 'Focus: Capturing your applied experience.' },
+      'Prepare for campus placements': { mult: 1.5, text: 'Focus: Prioritising high velocity before interviews.' },
+      'Sharpen product thinking and frameworks': { mult: 1, text: 'Focus: Going deep into structural analysis.' },
+      'Track progress across multiple tracks': { mult: 2, text: 'Focus: Maintaining high velocity across all tracks.' }
+    };
+    function getSectorCfg() {
+      const baseObj = sectorConfig[user && user.sector] || sectorConfig['Product Management'];
+      const goal = user && user.goal || 'Build a portfolio from scratch';
+      const gCfg = goalConfig[goal] || goalConfig['Build a portfolio from scratch'];
+      const cfg = JSON.parse(JSON.stringify(baseObj));
+      cfg.desc += ' ' + gCfg.text;
+      cfg.kpis.forEach(k => k.target = Math.max(1, Math.ceil(k.target * gCfg.mult)));
+      return cfg;
+    }
+
+    // ── USER ────────────────────────────────────────────────────────────────────
+    function applyUser() {
+      if (!user) return;
+      const initials = user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('sb-av').textContent = initials;
+      document.getElementById('sb-name').textContent = user.name;
+      document.getElementById('sb-sec').textContent = user.sector;
+      document.getElementById('sb-goal').textContent = user.goal;
+      document.getElementById('b-name').textContent = user.name;
+      document.getElementById('b-sector').textContent = user.sector;
+      // Sector-tailored banner desc
+      const cfg = getSectorCfg();
+      document.getElementById('b-desc').textContent = cfg.desc;
+      // Sector-tailored KPI labels + targets
+      const keys = ['td', 'prd', 'cc', 'ex'];
+      cfg.kpis.forEach((kpi, i) => {
+        const k = keys[i];
+        document.getElementById('kl-' + k).textContent = kpi.label;
+      });
+      renderSidebarNav();
+      const h = new Date().getHours();
+      const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      document.getElementById('b-greet').textContent = g + ', ' + user.name.split(' ')[0];
+    }
+
+    // ── NAV ─────────────────────────────────────────────────────────────────────
+    function nav(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sb-item').forEach(s => s.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      document.querySelector(`[onclick="nav('${id}')"]`)?.classList.add('active');
+      const sectorLabels = sectorNavItems[user && user.sector] || sectorNavItems['Product Management'];
+      const labelMap = {};
+      sectorLabels.forEach(it => { labelMap[it.page] = it.label; });
+      const t = {
+        dashboard: 'Dashboard', portfolio: 'My Portfolio',
+        'get-app': 'Install Portfl',
+        'new-teardown': labelMap['new-teardown'] || 'New Entry',
+        'new-prd': labelMap['new-prd'] || 'New Entry',
+        'new-experiment': labelMap['new-experiment'] || 'New Entry',
+        'new-casecomp': labelMap['new-casecomp'] || 'New Entry'
+      };
+      document.getElementById('page-title').textContent = t[id] || id;
+      if (id === 'dashboard') renderDashboard();
+      if (id === 'portfolio') renderPortfolio();
+
+      // Update Bottom Bar Active State
+      document.querySelectorAll('.bn-item').forEach(btn => btn.classList.remove('active'));
+      if (id === 'dashboard') document.getElementById('bn-dash')?.classList.add('active');
+      if (id === 'portfolio') document.getElementById('bn-port')?.classList.add('active');
+      if (id === 'get-app') document.getElementById('page-get-app').scrollTop = 0;
+      if (id === 'new-teardown') resetTeardown();
+    }
+
+    // ── TEARDOWN ────────────────────────────────────────────────────────────────
+    function resetTeardown() {
+      tdStepN = 0; showTdStep(0);
+      ['int-list', 'prob-list', 'sol-list'].forEach(id => document.getElementById(id).innerHTML = '');
+      document.querySelectorAll('.m-tag').forEach(t => t.classList.remove('sel'));
+    }
+    function showTdStep(n) {
+      tdStepN = n;
+      document.querySelectorAll('.wz-content').forEach((el, i) => el.classList.toggle('active', i === n));
+      document.querySelectorAll('#td-wiz .wz-step').forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i === n) el.classList.add('active');
+        if (i < n) el.classList.add('done');
+      });
+    }
+    function tdNext(n) { if (n === 0 && !document.getElementById('td-product').value.trim()) { toast('Please enter a product name'); return; } showTdStep(n + 1); }
+    function tdPrev(n) { showTdStep(n - 1); }
+
+    // ── DYNAMIC CARDS ───────────────────────────────────────────────────────────
+    function addInterview() {
+      const id = 'int' + Date.now(), el = document.createElement('div');
+      el.className = 'sub-card int-card'; el.id = id;
+      el.innerHTML = `<button class="sub-card-remove" onclick="document.getElementById('${id}').remove()">×</button>
+    <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label>User description</label><input placeholder="e.g. 22yo CS student, daily Groww user"/></div>
+      <div class="form-group"><label>Key insight</label><input placeholder="Most important thing they said"/></div>
+      <div class="form-group full"><label>Pain points mentioned</label><textarea style="min-height:60px" placeholder="What frustrated them?"></textarea></div>
+    </div>`;
+      document.getElementById('int-list').appendChild(el);
+    }
+    function addProblem() {
+      const id = 'prob' + Date.now(), el = document.createElement('div');
+      el.className = 'sub-card prob-card'; el.id = id;
+      el.innerHTML = `<button class="sub-card-remove" onclick="document.getElementById('${id}').remove()">×</button>
+    <div class="form-grid" style="gap:12px">
+      <div class="form-group full"><label>Problem (be specific)</label><textarea style="min-height:72px" placeholder="e.g. New users cannot locate the SIP setup — buried 3 taps deep, causing drop-off before first investment."></textarea></div>
+      <div class="form-group"><label>Evidence source</label><input placeholder="e.g. Mentioned by 3 of 5 users"/></div>
+      <div class="form-group"><label>Severity</label><select><option>High — blocks core action</option><option>Medium — causes friction</option><option>Low — nice to fix</option></select></div>
+    </div>`;
+      document.getElementById('prob-list').appendChild(el);
+    }
+    function addSolution() {
+      const id = 'sol' + Date.now(), el = document.createElement('div');
+      el.className = 'sub-card sol-card'; el.id = id;
+      el.innerHTML = `<button class="sub-card-remove" onclick="document.getElementById('${id}').remove()">×</button>
+    <div class="form-grid" style="gap:12px">
+      <div class="form-group full"><label>Proposed solution</label><textarea style="min-height:72px" placeholder="What would you change or build? Be concrete."></textarea></div>
+      <div class="form-group"><label>Tradeoff / risk</label><textarea style="min-height:60px" placeholder="What could go wrong?"></textarea></div>
+      <div class="form-group"><label>Success metric</label><input placeholder="How would you measure success?"/></div>
+    </div>`;
+      document.getElementById('sol-list').appendChild(el);
+    }
+
+    // ── SAVE ────────────────────────────────────────────────────────────────────
+    function saveTeardown() {
+      const product = document.getElementById('td-product').value.trim();
+      if (!product) { toast('Please enter a product name'); nav('new-teardown'); return; }
+      portfolio.push({
+        id: Date.now(), type: 'teardown', title: product + ' — Product Teardown', product,
+        desc: document.getElementById('td-job').value || '', status: document.getElementById('td-status').value, date: fd(),
+        extra: {
+          job: document.getElementById('td-job').value, why: document.getElementById('td-why').value,
+          category: document.getElementById('td-cat').value, platform: document.getElementById('td-platform').value,
+          userSeg: document.getElementById('td-userseg').value, friction: document.getElementById('td-friction').value,
+          journey: document.getElementById('td-journey').value,
+          northStar: document.getElementById('td-north').value,
+          metrics: [...document.querySelectorAll('.m-tag.sel')].map(e => e.textContent)
+        }
+      });
+      save(); toast('Teardown saved ✓'); setTimeout(() => nav('portfolio'), 700);
+    }
+    function savePRD() {
+      const title = document.getElementById('prd-title').value.trim();
+      if (!title) { toast('Please enter a title'); return; }
+      portfolio.push({
+        id: Date.now(), type: 'prd', title, product: document.getElementById('prd-product').value,
+        desc: document.getElementById('prd-problem').value || '', status: document.getElementById('prd-status').value, date: fd(),
+        extra: {
+          personas: document.getElementById('prd-personas').value, metrics: document.getElementById('prd-metrics').value,
+          scope: document.getElementById('prd-scope').value, outscope: document.getElementById('prd-outscope').value
+        }
+      });
+      save(); toast('PRD saved ✓'); setTimeout(() => nav('portfolio'), 700);
+    }
+    function saveExperiment() {
+      const title = document.getElementById('exp-title').value.trim();
+      if (!title) { toast('Please enter a name'); return; }
+      portfolio.push({
+        id: Date.now(), type: 'experiment', title, product: document.getElementById('exp-product').value,
+        desc: document.getElementById('exp-hypothesis').value || '', status: document.getElementById('exp-result').value, date: fd(),
+        extra: {
+          control: document.getElementById('exp-control').value, variant: document.getElementById('exp-variant').value,
+          metric: document.getElementById('exp-metric').value, learnings: document.getElementById('exp-learnings').value
+        }
+      });
+      save(); toast('Experiment saved ✓'); setTimeout(() => nav('portfolio'), 700);
+    }
+    function saveCaseComp() {
+      const title = document.getElementById('cc-title').value.trim();
+      if (!title) { toast('Please enter the competition name'); return; }
+      portfolio.push({
+        id: Date.now(), type: 'casecomp', title, product: document.getElementById('cc-org').value,
+        desc: document.getElementById('cc-problem').value || '', status: 'published', date: fd(),
+        extra: {
+          solution: document.getElementById('cc-solution').value, result: document.getElementById('cc-result').value,
+          team: document.getElementById('cc-team').value, learnings: document.getElementById('cc-learnings').value
+        }
+      });
+      save(); toast('Case comp saved ✓'); setTimeout(() => nav('portfolio'), 700);
+    }
+
+    // ── RENDER ───────────────────────────────────────────────────────────────────
+    // Sidebar "Add Work" nav — label + icon per sector, always all 4 pages
+    const sectorNavItems = {
+      'Product Management': [
+        { icon: '🔍', label: 'Product Teardown', page: 'new-teardown' },
+        { icon: '📋', label: 'PRD', page: 'new-prd' },
+        { icon: '🧪', label: 'A/B Experiment', page: 'new-experiment' },
+        { icon: '🏆', label: 'Case Competition', page: 'new-casecomp' },
+      ],
+      'Investment Banking': [
+        { icon: '🏆', label: 'Deal / Case', page: 'new-casecomp' },
+        { icon: '📋', label: 'Pitch / Memo Doc', page: 'new-prd' },
+        { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' },
+        { icon: '🧪', label: 'Model Experiment', page: 'new-experiment' },
+      ],
+      'Consulting': [
+        { icon: '🏆', label: 'Case Competition', page: 'new-casecomp' },
+        { icon: '📋', label: 'Strategy Doc', page: 'new-prd' },
+        { icon: '🔍', label: 'Company Analysis', page: 'new-teardown' },
+        { icon: '🧪', label: 'Framework Test', page: 'new-experiment' },
+      ],
+      'Equity Research': [
+        { icon: '📋', label: 'Investment Memo', page: 'new-prd' },
+        { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' },
+        { icon: '🧪', label: 'Thesis Test', page: 'new-experiment' },
+        { icon: '🏆', label: 'Stock Pitch Comp', page: 'new-casecomp' },
+      ],
+      'Software Engineering': [
+        { icon: '🔍', label: 'Product Teardown', page: 'new-teardown' },
+        { icon: '🧪', label: 'Experiment', page: 'new-experiment' },
+        { icon: '📋', label: 'System Design Doc', page: 'new-prd' },
+        { icon: '🏆', label: 'Build Challenge', page: 'new-casecomp' },
+      ],
+      'General Management': [
+        { icon: '📋', label: 'Strategy Doc', page: 'new-prd' },
+        { icon: '🏆', label: 'Case Competition', page: 'new-casecomp' },
+        { icon: '🔍', label: 'Org / Product Analysis', page: 'new-teardown' },
+        { icon: '🧪', label: 'Initiative Test', page: 'new-experiment' },
+      ],
+    };
+
+    function renderSidebarNav() {
+      const sector = user && user.sector;
+      const items = sectorNavItems[sector] || sectorNavItems['Product Management'];
+      document.getElementById('sb-add-items').innerHTML = items.map(it =>
+        `<div class="sb-item" onclick="nav('${it.page}')"><span class="si">${it.icon}</span> ${it.label}</div>`
+      ).join('');
+    }
+
+    const sectorActions = {
+      'Product Management': [{ icon: '🔍', label: 'Product Teardown', page: 'new-teardown', primary: true }, { icon: '📋', label: 'Write a PRD', page: 'new-prd' }, { icon: '🧪', label: 'A/B Experiment', page: 'new-experiment' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }],
+      'Investment Banking': [{ icon: '🏆', label: 'Case Comp', page: 'new-casecomp', primary: true }, { icon: '📋', label: 'Deal / Pitch Doc', page: 'new-prd' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🧪', label: 'Model Test', page: 'new-experiment' }],
+      'Consulting': [{ icon: '🏆', label: 'Case Comp', page: 'new-casecomp', primary: true }, { icon: '🔍', label: 'Company Analysis', page: 'new-teardown' }, { icon: '📋', label: 'Strategy Doc', page: 'new-prd' }, { icon: '🧪', label: 'Experiment', page: 'new-experiment' }],
+      'Equity Research': [{ icon: '📋', label: 'Investment Memo', page: 'new-prd', primary: true }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '🧪', label: 'Thesis Test', page: 'new-experiment' }],
+      'Software Engineering': [{ icon: '🔍', label: 'Product Teardown', page: 'new-teardown', primary: true }, { icon: '🧪', label: 'Experiment', page: 'new-experiment' }, { icon: '📋', label: 'System Design Doc', page: 'new-prd' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }],
+      'General Management': [{ icon: '📋', label: 'Strategy Doc', page: 'new-prd', primary: true }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🧪', label: 'Initiative Test', page: 'new-experiment' }],
+    };
+    const sectorNextSteps = {
+      'Product Management': [
+        { label: 'Do your first product teardown', sub: 'Pick an app you use daily', page: 'new-teardown', type: 'teardown' },
+        { label: 'Write a PRD', sub: 'Document a feature you would build', page: 'new-prd', type: 'prd' },
+        { label: 'Run an A/B experiment', sub: 'Test a hypothesis with real users', page: 'new-experiment', type: 'experiment' },
+        { label: 'Enter a case competition', sub: 'Practice under pressure', page: 'new-casecomp', type: 'casecomp' },
+      ],
+      'Investment Banking': [
+        { label: 'Document a deal or case', sub: 'Model walkthrough or pitch deck', page: 'new-casecomp', type: 'casecomp' },
+        { label: 'Write an investment memo', sub: 'Cover thesis, risks, and valuation', page: 'new-prd', type: 'prd' },
+        { label: 'Tear down a public company', sub: 'Revenue model, moat, competitive position', page: 'new-teardown', type: 'teardown' },
+        { label: 'Enter a finance case comp', sub: 'Practice speed and structure', page: 'new-casecomp', type: 'casecomp' },
+      ],
+      'Consulting': [
+        { label: 'Enter your first case comp', sub: 'Structure and recommend under time pressure', page: 'new-casecomp', type: 'casecomp' },
+        { label: 'Document a consulting project', sub: 'Problem, approach, recommendation', page: 'new-prd', type: 'prd' },
+        { label: 'Tear down a company strategy', sub: 'Apply a framework — Porter, BCG matrix', page: 'new-teardown', type: 'teardown' },
+        { label: 'Log a structured experiment', sub: 'Test a recommendation hypothesis', page: 'new-experiment', type: 'experiment' },
+      ],
+      'Equity Research': [
+        { label: 'Write your first investment memo', sub: 'Bull/bear case with a price target', page: 'new-prd', type: 'prd' },
+        { label: 'Tear down a listed company', sub: 'Business model, financials, moat', page: 'new-teardown', type: 'teardown' },
+        { label: 'Test a thesis with data', sub: 'Track a prediction against outcome', page: 'new-experiment', type: 'experiment' },
+        { label: 'Enter a stock pitch competition', sub: 'Defend your view in front of a panel', page: 'new-casecomp', type: 'casecomp' },
+      ],
+      'Software Engineering': [
+        { label: 'Tear down a product you admire', sub: 'Architecture, UX, and tradeoffs', page: 'new-teardown', type: 'teardown' },
+        { label: 'Document a system design', sub: 'Problem, approach, tradeoffs made', page: 'new-prd', type: 'prd' },
+        { label: 'Run a real experiment', sub: 'A/B test or feature flag on a project', page: 'new-experiment', type: 'experiment' },
+        { label: 'Enter a build challenge', sub: 'Hackathon or product case competition', page: 'new-casecomp', type: 'casecomp' },
+      ],
+      'General Management': [
+        { label: 'Document a leadership initiative', sub: 'What you owned, drove, and measured', page: 'new-prd', type: 'prd' },
+        { label: 'Enter a strategy case comp', sub: 'Show cross-functional thinking', page: 'new-casecomp', type: 'casecomp' },
+        { label: 'Tear down an organisation or product', sub: 'Diagnose what works and what does not', page: 'new-teardown', type: 'teardown' },
+        { label: 'Log a decision experiment', sub: 'Hypothesis, action, and outcome', page: 'new-experiment', type: 'experiment' },
+      ],
+    };
+
+    function renderQuickActions() {
+      const sector = user && user.sector;
+      const actions = sectorActions[sector] || sectorActions['Product Management'];
+      document.getElementById('quick-actions').innerHTML = actions.map(a =>
+        `<button class="qa-btn qa-primary" onclick="nav('${a.page}')">
+      <span class="qa-icon">${a.icon}</span>
+      <span class="qa-label">${a.label}</span>
+    </button>`
+      ).join('');
+    }
+
+    function renderNextSteps() {
+      const sector = user && user.sector;
+      const steps = sectorNextSteps[sector] || sectorNextSteps['Product Management'];
+      const typeCounts = {};
+      portfolio.forEach(p => { typeCounts[p.type] = (typeCounts[p.type] || 0) + 1; });
+      const renderedTypes = {};
+      document.getElementById('nextsteps-grid').innerHTML = steps.map(s => {
+        renderedTypes[s.type] = (renderedTypes[s.type] || 0) + 1;
+        const done = (typeCounts[s.type] || 0) >= renderedTypes[s.type];
+        return `<div class="ns-card${done ? ' done' : ''}" onclick="${done ? '' : "nav('" + s.page + "')"}">
+      <div class="ns-check">${done ? '✓' : ''}</div>
+      <div><div class="ns-text">${s.label}</div><div class="ns-sub">${s.sub}</div></div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderEmptyCTA() {
+      const sector = user && user.sector;
+      const actions = sectorActions[sector] || sectorActions['Product Management'];
+      const first = actions[0];
+      const emptyTexts = {
+        'Product Management': 'Start with a product teardown — pick an app you use every day and document what works, what does not, and what you would change.',
+        'Investment Banking': 'Begin by documenting a deal or case you have studied — structure your thesis, model walkthrough, or pitch narrative.',
+        'Consulting': 'Log your first case competition — structure the problem, your framework, and your recommendation.',
+        'Equity Research': 'Write your first investment memo — pick a company, take a stance, and document the bull and bear case.',
+        'Software Engineering': 'Tear down a product or system you admire — document the architecture, UX decisions, and tradeoffs.',
+        'General Management': 'Document a leadership initiative — describe what you owned, how you drove it, and how you measured success.',
+      };
+      const el = document.getElementById('recent-grid');
+      if (el && portfolio.length === 0) {
+        el.innerHTML = `<div class="empty-card">
+      <div class="ec-icon">${first.icon}</div>
+      <h3>Your portfolio is empty</h3>
+      <p>${emptyTexts[sector] || emptyTexts['Product Management']}</p>
+      <button class="btn btn-ink" onclick="nav('${first.page}')">${first.label} →</button>
+    </div>`;
+      }
+    }
+
+    function renderDashboard() {
+      const c = { teardown: 0, prd: 0, casecomp: 0, experiment: 0 };
+      portfolio.forEach(p => { if (c[p.type] !== undefined) c[p.type]++; });
+      const cfg = getSectorCfg();
+      const tg = { teardown: cfg.kpis[0].target, prd: cfg.kpis[1].target, casecomp: cfg.kpis[2].target, experiment: cfg.kpis[3].target };
+      const map = { teardown: 'td', prd: 'prd', casecomp: 'cc', experiment: 'ex' };
+      for (const k in c) {
+        document.getElementById('k-' + map[k]).textContent = c[k];
+        document.getElementById('kb-' + map[k]).style.width = Math.min((c[k] / tg[k]) * 100, 100) + '%';
+      }
+      renderQuickActions();
+      renderNextSteps();
+      renderRecentWork();
+      updateComp();
+    }
+
+    // Priority order of entry types per sector for Recent Work
+    const sectorTypePriority = {
+      'Product Management': ['teardown', 'prd', 'experiment', 'casecomp'],
+      'Investment Banking': ['casecomp', 'prd', 'teardown', 'experiment'],
+      'Consulting': ['casecomp', 'prd', 'teardown', 'experiment'],
+      'Equity Research': ['prd', 'teardown', 'experiment', 'casecomp'],
+      'Software Engineering': ['teardown', 'experiment', 'prd', 'casecomp'],
+      'General Management': ['prd', 'casecomp', 'teardown', 'experiment'],
+    };
+
+    function renderRecentWork() {
+      const el = document.getElementById('recent-grid');
+      if (!portfolio.length) { renderEmptyCTA(); return; }
+      const sector = user && user.sector;
+      const priority = sectorTypePriority[sector] || sectorTypePriority['Product Management'];
+      // Sort: primary type first, then by recency within each tier
+      const sorted = [...portfolio].sort((a, b) => {
+        const pa = priority.indexOf(a.type), pb = priority.indexOf(b.type);
+        if (pa !== pb) return pa - pb;
+        return b.id - a.id; // newer first within same type
+      });
+      el.innerHTML = sorted.slice(0, 6).map(pieceCard).join('');
+    }
+    function renderPortfolio() {
+      document.getElementById('pc-count').textContent = portfolio.length;
+      document.getElementById('portfolio-grid').innerHTML = portfolio.length
+        ? [...portfolio].reverse().map(pieceCard).join('')
+        : `<div class="empty-card"><div class="ec-icon">🗂</div><h3>Portfolio is empty</h3><p>Add teardowns, PRDs, experiments, and case competitions to build your record.</p></div>`;
+    }
+    function pieceCard(p, idx) {
+      const delay = (typeof idx === 'number' ? Math.min(idx, 15) : 0) * 0.05;
+      const tl = { teardown: 'Teardown', prd: 'PRD', casecomp: 'Case Comp', experiment: 'Experiment' }[p.type];
+      const sl = { draft: 'Draft', inprogress: 'In Progress', published: 'Published' }[p.status];
+      const sc = { draft: 'ps-draft', inprogress: 'ps-inprogress', published: 'ps-published' }[p.status];
+      const e = p.extra || {};
+
+      // Build type-specific detail snippets
+      let snippets = '';
+      if (p.type === 'teardown') {
+        if (e.category) snippets += `<span class="pc-chip">${e.category}</span>`;
+        if (e.platform) snippets += `<span class="pc-chip">${e.platform}</span>`;
+        if (e.northStar) snippets += `<div class="pc-meta-row"><span class="pc-meta-label">North Star</span><span class="pc-meta-val">${e.northStar.slice(0, 40)}${e.northStar.length > 40 ? '...' : ''}</span></div>`;
+        if (e.userSeg) snippets += `<div class="pc-meta-row"><span class="pc-meta-label">Users</span><span class="pc-meta-val">${e.userSeg.slice(0, 40)}${e.userSeg.length > 40 ? '...' : ''}</span></div>`;
+      } else if (p.type === 'prd') {
+        if (e.personas) snippets += `<div class="pc-meta-row"><span class="pc-meta-label">Personas</span><span class="pc-meta-val">${e.personas.slice(0, 50)}${e.personas.length > 50 ? '...' : ''}</span></div>`;
+        if (e.metrics) snippets += `<div class="pc-meta-row"><span class="pc-meta-label">Metric</span><span class="pc-meta-val">${e.metrics.slice(0, 50)}${e.metrics.length > 50 ? '...' : ''}</span></div>`;
+      } else if (p.type === 'experiment') {
+        if (e.metric) snippets += `<div class="pc-meta-row"><span class="pc-meta-label">Metric</span><span class="pc-meta-val">${e.metric.slice(0, 50)}${e.metric.length > 50 ? '...' : ''}</span></div>`;
+        if (e.control && e.variant) snippets += `<div class="pc-exp-row"><span class="pc-exp-tag pc-exp-a">A</span><span class="pc-exp-text">${e.control.slice(0, 36)}${e.control.length > 36 ? '...' : ''}</span><span class="pc-exp-tag pc-exp-b">B</span><span class="pc-exp-text">${e.variant.slice(0, 36)}${e.variant.length > 36 ? '...' : ''}</span></div>`;
+      } else if (p.type === 'casecomp') {
+        if (e.result) snippets += `<div class="pc-meta-row"><span class="pc-meta-label">Result</span><span class="pc-meta-val">${e.result}</span></div>`;
+        if (e.team) snippets += `<span class="pc-chip">${e.team}</span>`;
+      }
+
+      return `<div class="piece-card" style="animation-delay: ${delay}s" onclick="openDetail(${p.id})">
+    <div class="pc-head">
+      <span class="pc-type pct-${p.type}">${tl}</span>
+      <span class="pc-status ${sc}">${sl}</span>
+    </div>
+    <div class="pc-title">${p.title}</div>
+    ${p.product ? `<div class="pc-product">${p.product}</div>` : ''}
+    ${p.desc ? `<div class="pc-desc">${p.desc.slice(0, 90)}${p.desc.length > 90 ? '...' : ''}</div>` : ''}
+    ${snippets ? `<div class="pc-snippets">${snippets}</div>` : ''}
+    <div class="pc-foot"><span class="pc-date">${p.date}</span></div>
+  </div>`;
+    }
+    function updateComp() {
+      const c = { teardown: 0, prd: 0, casecomp: 0, experiment: 0 };
+      portfolio.forEach(p => { if (c[p.type] !== undefined) c[p.type]++; });
+      const cfg = getSectorCfg();
+      const t = { teardown: cfg.kpis[0].target, prd: cfg.kpis[1].target, casecomp: cfg.kpis[2].target, experiment: cfg.kpis[3].target };
+      let s = 0, tot = 0; for (const k in t) { s += Math.min(c[k], t[k]); tot += t[k]; }
+      const pct = Math.round((s / tot) * 100) || 0;
+      document.getElementById('comp-bar').style.width = pct + '%';
+      document.getElementById('comp-pct').textContent = pct + '%';
+    }
+
+    // ── MODAL ───────────────────────────────────────────────────────────────────
+    function openDetail(id) {
+      const p = portfolio.find(x => x.id === id); if (!p) return;
+      const tl = { teardown: 'Teardown', prd: 'PRD', casecomp: 'Case Comp', experiment: 'Experiment' }[p.type];
+      document.getElementById('m-badge').innerHTML = `<span class="pc-type pct-${p.type}">${tl}</span>`;
+      document.getElementById('m-title').textContent = p.title;
+      document.getElementById('m-meta').textContent = (p.product || '') + (p.product && p.date ? ' · ' : '') + p.date;
+      let body = '';
+      if (p.desc) body += `<div class="modal-section"><div class="modal-section-label">Overview</div><div class="modal-section-content">${p.desc}</div></div>`;
+      if (p.extra) {
+        const e = p.extra;
+        if (e.job) body += `<div class="modal-section"><div class="modal-section-label">Core Job</div><div class="modal-section-content">${e.job}</div></div>`;
+        if (e.why) body += `<div class="modal-section"><div class="modal-section-label">Why This Product</div><div class="modal-section-content">${e.why}</div></div>`;
+        if (e.friction) body += `<div class="modal-section"><div class="modal-section-label">Friction Points</div><div class="modal-section-content">${e.friction}</div></div>`;
+        if (e.control) body += `<div class="modal-section"><div class="modal-section-label">Control (A)</div><div class="modal-section-content">${e.control}</div></div>`;
+        if (e.variant) body += `<div class="modal-section"><div class="modal-section-label">Variant (B)</div><div class="modal-section-content">${e.variant}</div></div>`;
+        if (e.metrics) body += `<div class="modal-section"><div class="modal-section-label">Success Metrics</div><div class="modal-section-content">${e.metrics}</div></div>`;
+        if (e.personas) body += `<div class="modal-section"><div class="modal-section-label">Personas</div><div class="modal-section-content">${e.personas}</div></div>`;
+        if (e.team) body += `<div class="modal-section"><div class="modal-section-label">Team Size</div><div class="modal-section-content">${e.team}</div></div>`;
+        if (e.solution) body += `<div class="modal-section"><div class="modal-section-label">Approach & Recommendation</div><div class="modal-section-content">${e.solution}</div></div>`;
+        if (e.journey) body += `<div class="modal-section"><div class="modal-section-label">User Journey</div><div class="modal-section-content" style="white-space:pre-line">${e.journey}</div></div>`;
+        if (e.northStar) body += `<div class="modal-section"><div class="modal-section-label">North Star Metric</div><div class="modal-section-content">${e.northStar}</div></div>`;
+        if (e.metrics && e.metrics.length) body += `<div class="modal-section"><div class="modal-section-label">Supporting Metrics</div><div style="margin-top:4px">${e.metrics.map(m => `<span class="m-chip">${m}</span>`).join('')}</div></div>`;
+        if (e.result) body += `<div class="modal-section"><div class="modal-section-label">Result</div><div class="modal-section-content">${e.result}</div></div>`;
+        if (e.learnings) body += `<div class="modal-section"><div class="modal-section-label">Key Learnings</div><div class="modal-section-content">${e.learnings}</div></div>`;
+      }
+      document.getElementById('m-body').innerHTML = body || '<p style="color:var(--muted);font-size:13px">No additional details recorded.</p>';
+      const delBtn = document.getElementById('m-del');
+      delBtn.onclick = () => deleteEntry(id);
+      delBtn.dataset.confirm = '0';
+      delBtn.textContent = 'Delete entry';
+      delBtn.style.background = '';
+      delBtn.style.color = '';
+      delBtn.style.borderColor = '';
+      document.getElementById('detail-modal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
+    function deleteEntry(id) {
+      const btn = document.getElementById('m-del');
+      if (btn.dataset.confirm !== '1') {
+        btn.dataset.confirm = '1';
+        btn.textContent = 'Click again to confirm delete';
+        btn.style.background = 'var(--red)';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'var(--red)';
+        // Reset after 3 seconds if not clicked
+        setTimeout(() => {
+          if (btn && btn.dataset.confirm === '1') {
+            btn.dataset.confirm = '0';
+            btn.textContent = 'Delete entry';
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.borderColor = '';
+          }
+        }, 3000);
+        return;
+      }
+      portfolio = portfolio.filter(p => p.id !== id);
+      save(); closeModal(); renderDashboard(); renderPortfolio(); toast('Entry deleted ✓');
+    }
+
+    // ── UTILS ────────────────────────────────────────────────────────────────────
+    function save() { localStorage.setItem('portfl_portfolio', JSON.stringify(portfolio)); document.getElementById('pc-count').textContent = portfolio.length; updateComp(); }
+    function fd() { return new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); }
+    function toast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+    // ── THEME ────────────────────────────────────────────────────────────────────
+    function toggleTheme() {
+      const dark = document.body.classList.toggle('dark');
+      localStorage.setItem('portfl_theme', dark ? 'dark' : 'light');
+      document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+      document.getElementById('theme-meta').content = dark ? '#18181b' : '#f7f6f2';
+    }
+    (function initTheme() {
+      const saved = localStorage.getItem('portfl_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.body.classList.add('dark');
+      }
+    })();
+
+    // ── INIT ─────────────────────────────────────────────────────────────────────
+    if (user) { document.getElementById('onboarding').style.display = 'none'; document.getElementById('app').classList.add('visible'); applyUser(); renderDashboard(); }
+    // Sync theme button icon on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('theme-btn');
+      if (btn) btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    });
+
+    // ── MOBILE SIDEBAR ────────────────────────────────────────────────────────────
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebar-overlay').classList.toggle('visible');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('visible');
+    }
+    // Close sidebar when navigating on mobile
+    const origNav = nav;
+    nav = function(id) {
+      closeSidebar();
+      origNav(id);
+    };
+
+    // ── CONNECTIVITY MONITOR ────────────────────────────────────────────────────────
+    function updateOnlineStatus() {
+      const bar = document.getElementById('connectivity-bar');
+      const text = document.getElementById('connectivity-text');
+      if (!navigator.onLine) {
+        bar.className = 'connectivity-bar offline visible';
+        text.textContent = 'You are offline — all your data is saved locally';
+        // Keep visible while offline
+      } else {
+        bar.className = 'connectivity-bar online visible';
+        text.textContent = 'Back online';
+        setTimeout(() => bar.classList.remove('visible'), 3000);
+      }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    // Show if already offline on load
+    if (!navigator.onLine) {
+      setTimeout(updateOnlineStatus, 1000);
+    }
+
+    // ── SERVICE WORKER ────────────────────────────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => {
+            console.log('Portfl SW registered');
+            // Check for updates every 60 seconds
+            setInterval(() => reg.update(), 60000);
+            // Listen for new SW waiting
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New version available
+                  document.getElementById('update-banner').classList.add('visible');
+                }
+              });
+            });
+          })
+          .catch(err => console.warn('SW registration failed:', err));
+      });
+
+      // Listen for messages from SW
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'SW_UPDATED') {
+          console.log('App updated to:', event.data.version);
+        }
+      });
+    }
+
+    // ── INSTALL PROMPT ────────────────────────────────────────────────────────────
+    let deferredPrompt = null;
+    // Track if already installed
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                      || window.navigator.standalone === true;
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Update manual buttons if they exist
+      const manualBtn = document.getElementById('manual-install-btn');
+      if (manualBtn) manualBtn.style.display = 'block';
+
+      // Show install banner after 3s if not already installed
+      if (!isStandalone && !sessionStorage.getItem('portfl_install_dismissed')) {
+        setTimeout(() => {
+          if (deferredPrompt && document.getElementById('app').classList.contains('visible')) {
+            showInstallBanner();
+          }
+        }, 3000);
+      }
+    });
+
+    // Detect if app was just installed
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      const b = document.getElementById('install-banner');
+      if (b) b.remove();
+      toast('Portfl installed successfully! ✓');
+    });
+
+    function showInstallBanner() {
+      if (document.getElementById('install-banner')) return;
+      if (isStandalone) return; // Don't show if already running as app
+      const banner = document.createElement('div');
+      banner.id = 'install-banner';
+      banner.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;flex:1">
+      <span style="font-size:22px">📲</span>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">Install Portfl</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Works offline as a native app</div>
+      </div>
+    </div>
+    <button onclick="installApp()" style="padding:8px 16px;background:var(--ink);color:var(--bg);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Install</button>
+    <button onclick="dismissInstall()" style="padding:8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1">×</button>`;
+      banner.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);width:calc(100% - 48px);max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px;z-index:9997;box-shadow:0 8px 32px rgba(0,0,0,0.18);animation:slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+      document.body.appendChild(banner);
+      document.body.classList.add('has-install-banner');
+    }
+
+    function dismissInstall() {
+      const b = document.getElementById('install-banner');
+      if (b) b.remove();
+      document.body.classList.remove('has-install-banner');
+      // Don't show again this session
+      sessionStorage.setItem('portfl_install_dismissed', '1');
+    }
+
+    function installApp() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          toast('Installing Portfl ✓');
+          const manualBtn = document.getElementById('manual-install-btn');
+          if (manualBtn) manualBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+        const b = document.getElementById('install-banner');
+        if (b) b.remove();
+        document.body.classList.remove('has-install-banner');
+      });
+    }
+
+    // ── HASH-BASED DEEP LINKING (for manifest shortcuts) ──────────────────────────
+    function handleHash() {
+      const hash = location.hash.replace('#', '');
+      if (hash && user) {
+        const validPages = ['dashboard', 'portfolio', 'new-teardown', 'new-prd', 'new-experiment', 'new-casecomp'];
+        if (validPages.includes(hash)) {
+          nav(hash);
+        }
+      }
+    }
+    window.addEventListener('hashchange', handleHash);
+    // Handle initial hash on load
+    if (location.hash && user) {
+      setTimeout(handleHash, 100);
+    }
+
+
+  </script>
+</body>
+
+</html>
