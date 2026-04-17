@@ -1755,11 +1755,13 @@
         left: 0;
         top: 0;
         bottom: 0;
-        z-index: 100;
+        z-index: 10002;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: none;
         width: 280px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       #sidebar.open {
@@ -2029,14 +2031,7 @@
         -webkit-overflow-scrolling: touch;
       }
 
-      #sidebar {
-        display: none;
-      }
-
-      /* On mobile, only show when manually toggled */
-      #sidebar.open {
-        display: flex;
-      }
+      /* Sidebar uses transform for slide, display: none is removed to allow animation */
 
       .top-bar {
         padding: 12px 20px;
@@ -2068,7 +2063,17 @@
 </head>
 
 <body>
-
+  <div id="debug-error-banner" style="display:none;position:fixed;top:0;left:0;width:100%;background:red;color:white;z-index:999999;padding:20px;font-family:monospace;white-space:pre-wrap;word-break:break-all;"></div>
+  <script>
+    window.addEventListener('error', function(e) {
+      document.getElementById('debug-error-banner').style.display = 'block';
+      document.getElementById('debug-error-banner').textContent += 'ERR: ' + e.message + ' at ' + e.filename + ':' + e.lineno + ':' + e.colno + '\n';
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      document.getElementById('debug-error-banner').style.display = 'block';
+      document.getElementById('debug-error-banner').textContent += 'PROMISE REJ: ' + (e.reason && e.reason.stack ? e.reason.stack : e.reason) + '\n';
+    });
+  </script>
   <!-- ══ CONNECTIVITY BAR ══ -->
   <div class="connectivity-bar" id="connectivity-bar">
     <span class="connectivity-dot"></span>
@@ -2509,6 +2514,7 @@
                   <span class="m-tag" onclick="this.classList.toggle('sel')">Revenue per User</span>
                 </div>
               </div>
+              <div class="form-group"><label>Upload Proofs (PDF, Optional)</label><input type="file" id="td-proofs" multiple accept=".pdf" /></div>
               <div class="form-group"><label>Status</label><select id="td-status">
                   <option value="inprogress">In Progress</option>
                   <option value="draft">Draft</option>
@@ -2546,6 +2552,7 @@
                   <option value="inprogress">In Progress</option>
                   <option value="published">Published</option>
                 </select></div>
+              <div class="form-group full"><label>Upload Proofs (PDF, Optional)</label><input type="file" id="prd-proofs" multiple accept=".pdf" /></div>
             </div>
           </div>
           <button class="btn btn-ink" onclick="savePRD()">✓ Save PRD to Portfolio</button>
@@ -2578,6 +2585,7 @@
                 </select></div>
               <div class="form-group full"><label>Key Learnings</label><textarea id="exp-learnings"
                   placeholder="What did you learn? What would you do differently?"></textarea></div>
+              <div class="form-group full"><label>Upload Proofs (PDF, Optional)</label><input type="file" id="exp-proofs" multiple accept=".pdf" /></div>
             </div>
           </div>
           <button class="btn btn-ink" onclick="saveExperiment()">✓ Save Experiment</button>
@@ -2608,6 +2616,7 @@
                 </select></div>
               <div class="form-group full"><label>Key Learnings</label><textarea id="cc-learnings"
                   placeholder="What did you learn about structuring business problems?"></textarea></div>
+              <div class="form-group full"><label>Upload Proofs (PDF, Optional)</label><input type="file" id="cc-proofs" multiple accept=".pdf" /></div>
             </div>
           </div>
           <button class="btn btn-ink" onclick="saveCaseComp()">✓ Save to Portfolio</button>
@@ -2986,7 +2995,27 @@
     }
 
     // ── SAVE ────────────────────────────────────────────────────────────────────
-    function saveTeardown() {
+    async function collectProofs(inputId) {
+      const proofInput = document.getElementById(inputId);
+      const proofs = [];
+      try {
+        if (proofInput && proofInput.files.length > 0) {
+          const db = await getDB();
+          const tx = db.transaction('proofs', 'readwrite');
+          for (let i = 0; i < proofInput.files.length; i++) {
+            const file = proofInput.files[i];
+            const pid = 'pf_' + Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 5);
+            tx.objectStore('proofs').put(file, pid);
+            proofs.push({ id: pid, name: file.name });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to save proofs to IDB:", err);
+      }
+      return proofs;
+    }
+
+    async function saveTeardown() {
       const product = document.getElementById('td-product').value.trim();
       if (!product) { toast('Please enter a product name'); nav('new-teardown'); return; }
       portfolio.push({
@@ -2998,12 +3027,13 @@
           userSeg: document.getElementById('td-userseg').value, friction: document.getElementById('td-friction').value,
           journey: document.getElementById('td-journey').value,
           northStar: document.getElementById('td-north').value,
-          metrics: [...document.querySelectorAll('.m-tag.sel')].map(e => e.textContent)
+          metrics: [...document.querySelectorAll('.m-tag.sel')].map(e => e.textContent),
+          proofs: await collectProofs('td-proofs')
         }
       });
       save(); toast('Teardown saved ✓'); setTimeout(() => nav('portfolio'), 700);
     }
-    function savePRD() {
+    async function savePRD() {
       const title = document.getElementById('prd-title').value.trim();
       if (!title) { toast('Please enter a title'); return; }
       portfolio.push({
@@ -3011,12 +3041,13 @@
         desc: document.getElementById('prd-problem').value || '', status: document.getElementById('prd-status').value, date: fd(),
         extra: {
           personas: document.getElementById('prd-personas').value, metrics: document.getElementById('prd-metrics').value,
-          scope: document.getElementById('prd-scope').value, outscope: document.getElementById('prd-outscope').value
+          scope: document.getElementById('prd-scope').value, outscope: document.getElementById('prd-outscope').value,
+          proofs: await collectProofs('prd-proofs')
         }
       });
       save(); toast('PRD saved ✓'); setTimeout(() => nav('portfolio'), 700);
     }
-    function saveExperiment() {
+    async function saveExperiment() {
       const title = document.getElementById('exp-title').value.trim();
       if (!title) { toast('Please enter a name'); return; }
       portfolio.push({
@@ -3024,12 +3055,13 @@
         desc: document.getElementById('exp-hypothesis').value || '', status: document.getElementById('exp-result').value, date: fd(),
         extra: {
           control: document.getElementById('exp-control').value, variant: document.getElementById('exp-variant').value,
-          metric: document.getElementById('exp-metric').value, learnings: document.getElementById('exp-learnings').value
+          metric: document.getElementById('exp-metric').value, learnings: document.getElementById('exp-learnings').value,
+          proofs: await collectProofs('exp-proofs')
         }
       });
       save(); toast('Experiment saved ✓'); setTimeout(() => nav('portfolio'), 700);
     }
-    function saveCaseComp() {
+    async function saveCaseComp() {
       const title = document.getElementById('cc-title').value.trim();
       if (!title) { toast('Please enter the competition name'); return; }
       portfolio.push({
@@ -3037,7 +3069,8 @@
         desc: document.getElementById('cc-problem').value || '', status: 'published', date: fd(),
         extra: {
           solution: document.getElementById('cc-solution').value, result: document.getElementById('cc-result').value,
-          team: document.getElementById('cc-team').value, learnings: document.getElementById('cc-learnings').value
+          team: document.getElementById('cc-team').value, learnings: document.getElementById('cc-learnings').value,
+          proofs: await collectProofs('cc-proofs')
         }
       });
       save(); toast('Case comp saved ✓'); setTimeout(() => nav('portfolio'), 700);
