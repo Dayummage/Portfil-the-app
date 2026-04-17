@@ -3,8 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="description" content="Build and track your professional portfolio across teardowns, PRDs, experiments, and case competitions. Works offline." />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description"
+    content="Build and track your professional portfolio across teardowns, PRDs, experiments, and case competitions. Works offline." />
   <title>Portfl — Career Portfolio</title>
 
   <!-- PWA -->
@@ -96,7 +98,31 @@
       background: rgba(24, 24, 27, 0.92);
     }
 
-    * {
+    body,
+    .page,
+    .topbar,
+    .kpi,
+    .piece-card,
+    .sb-item,
+    .btn,
+    .qa-btn,
+    .ns-card,
+    .form-section,
+    .modal-box,
+    .modal-bg,
+    #sidebar,
+    .dash-banner,
+    .sub-card,
+    .ob-sector,
+    .ob-goal,
+    .sb-top,
+    .sb-nav,
+    .sb-foot,
+    .bottom-bar,
+    nav,
+    input,
+    textarea,
+    select {
       transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     }
 
@@ -116,6 +142,7 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
     }
 
     /* ── ONBOARDING ── */
@@ -128,9 +155,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* Start from top to allow scrolling */
+      justify-content: flex-start;
+      /* Start from top to allow scrolling */
       padding: 40px 24px;
-      overflow-y: auto; /* Enable vertical scroll */
+      overflow-y: auto;
+      /* Enable vertical scroll */
       -webkit-overflow-scrolling: touch;
     }
 
@@ -363,13 +392,27 @@
     #app {
       display: none;
       height: 100vh;
-      height: 100dvh; /* Dynamic viewport height for mobile */
+      height: 100dvh;
+      /* Dynamic viewport height for mobile */
       overflow: hidden;
       position: relative;
     }
 
     #app.visible {
       display: flex;
+    }
+
+    @media (max-width: 768px) {
+      #app {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: visible;
+      }
+
+      #app.visible {
+        display: block;
+      }
     }
 
     /* ── SIDEBAR ── */
@@ -532,8 +575,18 @@
       flex: 1;
       height: 100%;
       overflow-y: auto;
-      -webkit-overflow-scrolling: touch; /* Smooth inertia scroll for iOS */
+      -webkit-overflow-scrolling: touch;
+      /* Smooth inertia scroll for iOS */
       position: relative;
+      overscroll-behavior-y: contain;
+    }
+
+    @media (max-width: 768px) {
+      #main {
+        height: auto;
+        min-height: 0;
+        overflow-y: visible;
+      }
     }
 
     .topbar {
@@ -782,7 +835,7 @@
       width: 300px;
       height: 300px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(76, 184, 126, 0.1) 0%, rgba(0,0,0,0) 70%);
+      background: radial-gradient(circle, rgba(76, 184, 126, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
       filter: blur(34px);
       pointer-events: none;
     }
@@ -939,8 +992,15 @@
 
     /* ── PIECE CARDS ── */
     @keyframes slideUpFade {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .pieces-grid {
@@ -1244,6 +1304,31 @@
       -webkit-box-shadow: 0 0 0 1000px var(--surface2) inset !important;
       -webkit-text-fill-color: var(--text) !important;
       transition: none !important;
+    }
+
+    input[type="file"] {
+      padding: 6px 8px;
+      cursor: pointer;
+    }
+
+    input[type="file"]::file-selector-button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-right: 14px;
+      transition: all 0.2s ease;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
     }
 
     textarea {
@@ -1569,8 +1654,15 @@
     }
 
     @keyframes pulseDot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     /* ── UPDATE BANNER ── */
@@ -1596,8 +1688,15 @@
     }
 
     @keyframes slideDownFade {
-      from { opacity: 0; transform: translateY(-16px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ── HAMBURGER (MOBILE) ── */
@@ -1647,10 +1746,6 @@
 
     /* ── MOBILE RESPONSIVENESS ── */
     @media (max-width: 768px) {
-      #app.visible {
-        flex-direction: column;
-      }
-
       .hamburger {
         display: block;
       }
@@ -1674,10 +1769,15 @@
 
       #main {
         width: 100%;
-        height: 100vh;
+        height: auto;
+        min-height: 0;
+        overflow-y: visible;
       }
 
       .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
         padding: 12px 16px;
       }
 
@@ -1687,6 +1787,7 @@
 
       .page {
         padding: 20px 16px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
       }
 
       .dash-banner {
@@ -1775,7 +1876,7 @@
         padding: 14px 20px;
       }
 
-      .modal-del > div {
+      .modal-del>div {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
@@ -1871,78 +1972,11 @@
       font-size: 48px;
       margin-bottom: 12px;
     }
-    
+
     @media (max-width: 768px) {
-      #page-get-app { padding: 20px 16px 80px; }
-    }
-
-    /* ── GET APP PAGE ── */
-    #page-get-app {
-      display: none;
-      padding: 40px 24px;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    #page-get-app.active {
-      display: block;
-    }
-
-    .ga-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      margin-top: 24px;
-      text-align: left;
-    }
-
-    .ga-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .ga-steps {
-      list-style: none;
-      padding: 0;
-      margin: 16px 0 0;
-    }
-
-    .ga-step {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .ga-step-num {
-      background: var(--ink);
-      color: var(--bg);
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 800;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .ga-icon-box {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-    
-    @media (max-width: 768px) {
-      #page-get-app { padding: 20px 16px 80px; }
+      #page-get-app {
+        padding: 20px 16px 80px;
+      }
     }
 
     /* ── BOTTOM NAV BAR (MOBILE) ── */
@@ -1959,7 +1993,7 @@
       z-index: 9998;
       align-items: center;
       justify-content: space-around;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
     }
 
     .bn-item {
@@ -1985,18 +2019,32 @@
     }
 
     @media (max-width: 768px) {
-      .bottom-bar { display: flex; }
-      body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
-      #sidebar { display: none; } /* On mobile, only show when manually toggled */
-      #sidebar.open { display: flex; }
-      
+      .bottom-bar {
+        display: flex;
+      }
+
+      body {
+        padding-bottom: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #sidebar {
+        display: none;
+      }
+
+      /* On mobile, only show when manually toggled */
+      #sidebar.open {
+        display: flex;
+      }
+
       .top-bar {
         padding: 12px 20px;
         position: sticky;
         top: 0;
         z-index: 999;
       }
-      
+
       /* Shift install banner up if bottom bar exists */
       body.has-install-banner #install-banner {
         bottom: calc(76px + env(safe-area-inset-bottom)) !important;
@@ -2005,14 +2053,15 @@
 
     /* ── INSTALL BANNER MOBILE FIX ── */
     body.has-install-banner .page {
-      padding-bottom: 20px; /* Reduced since bottom bar handles height */
+      padding-bottom: 20px;
+      /* Reduced since bottom bar handles height */
     }
 
     body.has-install-banner .wz-nav {
       bottom: calc(64px + env(safe-area-inset-bottom));
     }
 
-    body.has-install-banner .form-shell > .btn {
+    body.has-install-banner .form-shell>.btn {
       margin-bottom: 80px;
     }
   </style>
@@ -2032,8 +2081,10 @@
       <div style="font-size:13px;font-weight:700;color:var(--text)">Update Available</div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px">A new version of Portfl is ready</div>
     </div>
-    <button onclick="location.reload()" style="padding:8px 16px;background:var(--ink);color:var(--bg);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">Refresh</button>
-    <button onclick="document.getElementById('update-banner').classList.remove('visible')" style="padding:4px 8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1">×</button>
+    <button onclick="location.reload()"
+      style="padding:8px 16px;background:var(--ink);color:var(--bg);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">Refresh</button>
+    <button onclick="document.getElementById('update-banner').classList.remove('visible')"
+      style="padding:4px 8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1">×</button>
   </div>
 
   <!-- ══ ONBOARDING ══ -->
@@ -2048,7 +2099,8 @@
       <span>Portfolio</span>
     </div>
     <div class="bn-item" onclick="nav('new-teardown')">
-      <div style="background:var(--ink);color:var(--bg);width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:2px">
+      <div
+        style="background:var(--ink);color:var(--bg);width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:2px">
         <span style="font-size:18px;font-weight:700">+</span>
       </div>
       <span>Add Work</span>
@@ -2170,7 +2222,8 @@
       <div class="sb-nav">
         <div class="sb-label">Overview</div>
         <div class="sb-item active" onclick="nav('dashboard')"><span class="si">⚡</span> Dashboard</div>
-        <div class="sb-item" onclick="nav('portfolio')"><span class="si">🗂</span> Portfolio <span class="sc" id="pc-count">0</span></div>
+        <div class="sb-item" onclick="nav('portfolio')"><span class="si">🗂</span> Portfolio <span class="sc"
+            id="pc-count">0</span></div>
         <div class="sb-item" onclick="nav('get-app')" style="margin-top: 8px; color: var(--ink); font-weight: 700;">
           <span class="si">📲</span> Download App
         </div>
@@ -2284,15 +2337,23 @@
       <div class="page" id="page-get-app">
         <div class="ga-icon-box">📲</div>
         <h2 class="ob-heading">Get Portfl on your device</h2>
-        <p style="color:var(--muted);margin-top:12px">Install Portfl to use it full-screen and offline, just like a native app.</p>
+        <p style="color:var(--muted);margin-top:12px">Install Portfl to use it full-screen and offline, just like a
+          native app.</p>
 
         <div class="ga-card">
           <div class="ga-title">💻 Laptop / Desktop</div>
           <p style="font-size:13px;color:var(--muted)">Best for Chrome or Edge browsers.</p>
           <ul class="ga-steps">
-            <li class="ga-step"><div class="ga-step-num">1</div><span>Look at the right side of your <b>address bar</b>.</span></li>
-            <li class="ga-step"><div class="ga-step-num">2</div><span>Click the <b>Install icon</b> (it looks like a screen with a down arrow).</span></li>
-            <li class="ga-step"><div class="ga-step-num">3</div><span>Click <b>"Install"</b> in the popup.</span></li>
+            <li class="ga-step">
+              <div class="ga-step-num">1</div><span>Look at the right side of your <b>address bar</b>.</span>
+            </li>
+            <li class="ga-step">
+              <div class="ga-step-num">2</div><span>Click the <b>Install icon</b> (it looks like a screen with a down
+                arrow).</span>
+            </li>
+            <li class="ga-step">
+              <div class="ga-step-num">3</div><span>Click <b>"Install"</b> in the popup.</span>
+            </li>
           </ul>
         </div>
 
@@ -2300,14 +2361,24 @@
           <div class="ga-title">📱 Mobile (Android/iOS)</div>
           <p style="font-size:13px;color:var(--muted)">Best for Chrome or Safari.</p>
           <ul class="ga-steps">
-            <li class="ga-step"><div class="ga-step-num">!</div><span>If you see an <b>"Install Portfl"</b> banner at the bottom, just tap the Install button.</span></li>
-            <li class="ga-step"><div class="ga-step-num">1</div><span><b>On iOS:</b> Tap the <b>Share</b> icon (square with arrow) and select <b>"Add to Home Screen"</b>.</span></li>
-            <li class="ga-step"><div class="ga-step-num">2</div><span><b>On Android:</b> Tap the <b>three dots (⋮)</b> and select <b>"Install app"</b>.</span></li>
+            <li class="ga-step">
+              <div class="ga-step-num">!</div><span>If you see an <b>"Install Portfl"</b> banner at the bottom, just tap
+                the Install button.</span>
+            </li>
+            <li class="ga-step">
+              <div class="ga-step-num">1</div><span><b>On iOS:</b> Tap the <b>Share</b> icon (square with arrow) and
+                select <b>"Add to Home Screen"</b>.</span>
+            </li>
+            <li class="ga-step">
+              <div class="ga-step-num">2</div><span><b>On Android:</b> Tap the <b>three dots (⋮)</b> and select
+                <b>"Install app"</b>.</span>
+            </li>
           </ul>
         </div>
-        
+
         <div style="margin-top:32px; display:flex; flex-direction:column; gap:12px">
-          <button class="btn btn-ink" id="manual-install-btn" onclick="installApp()" style="display:none; width:100%">Install Portfl Now →</button>
+          <button class="btn btn-ink" id="manual-install-btn" onclick="installApp()"
+            style="display:none; width:100%">Install Portfl Now →</button>
           <button class="btn btn-outline" style="width:100%" onclick="history.back()">Back to App</button>
         </div>
       </div>
@@ -2543,6 +2614,33 @@
         </div>
       </div>
 
+      <!-- NEW PROJECT -->
+      <div class="page" id="page-new-project">
+        <div class="form-shell">
+          <div class="form-section">
+            <div class="form-section-title">📂 Project / Done Work</div>
+            <div class="form-grid">
+              <div class="form-group full"><label>Project Title *</label><input id="project-title"
+                  placeholder="e.g. Personal Portfolio Website, Marketing Campaign for College Fest" /></div>
+              <div class="form-group"><label>Category / Domain</label><input id="project-product"
+                  placeholder="e.g. Web Development, Design, Research" /></div>
+              <div class="form-group"><label>Date Completed</label><input type="date" id="project-date-input" /></div>
+              <div class="form-group full"><label>Description & Outcomes *</label><textarea id="project-desc"
+                  placeholder="What did you achieve? Use bullet points for impact."></textarea></div>
+              <div class="form-group"><label>Upload Proofs (PDFs)</label><input type="file" id="project-proofs" multiple accept=".pdf" /></div>
+              <div class="form-group full"><label>Project Link (Optional)</label><input id="project-link"
+                  placeholder="https://..." /></div>
+              <div class="form-group"><label>Status</label><select id="project-status">
+                  <option value="published">Completed</option>
+                  <option value="inprogress">In Progress</option>
+                  <option value="draft">Draft</option>
+                </select></div>
+            </div>
+          </div>
+          <button class="btn btn-ink" onclick="saveProject()">✓ Save Project to Portfolio</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2565,15 +2663,32 @@
     </div>
   </div>
 
+  <!-- PROOF MODAL -->
+  <div class="modal-bg" id="proof-modal" style="z-index: 10005;">
+    <div class="modal-box" style="width: 90vw; height: 90vh; max-width: none; display: flex; flex-direction: column;">
+      <div class="modal-head" style="flex-shrink: 0; padding: 12px 20px;">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-size:20px;font-weight:700;">Proof Document</div>
+        <button class="modal-close-btn" onclick="document.getElementById('proof-modal').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body" style="flex: 1; padding: 0;">
+        <iframe id="pm-frame" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+
   <!-- SETTINGS MODAL -->
   <div class="modal-bg" id="settings-modal">
     <div class="modal-box">
       <div class="modal-head">
         <div>
-          <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;line-height:1.2">Preferences</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:6px;font-family:'Menlo','Consolas','Courier New',monospace">Edit your workspace details</div>
+          <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;line-height:1.2">
+            Preferences</div>
+          <div
+            style="font-size:12px;color:var(--muted);margin-top:6px;font-family:'Menlo','Consolas','Courier New',monospace">
+            Edit your workspace details</div>
         </div>
-        <button class="modal-close-btn" onclick="document.getElementById('settings-modal').classList.remove('open')">✕</button>
+        <button class="modal-close-btn"
+          onclick="document.getElementById('settings-modal').classList.remove('open')">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-grid">
@@ -2601,12 +2716,13 @@
         </div>
       </div>
       <div class="modal-del" style="justify-content: space-between; align-items: center;">
-         <div style="display: flex; gap: 10px;">
-           <button class="btn btn-outline" onclick="exportData()">Export JSON ↓</button>
-           <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">Import JSON ↑</button>
-           <input type="file" id="import-file" style="display:none" accept=".json" onchange="importData(event)" />
-         </div>
-         <button class="btn btn-ink" onclick="saveSettings()">Save changes ✓</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-outline" onclick="exportData()">Export JSON ↓</button>
+          <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">Import JSON
+            ↑</button>
+          <input type="file" id="import-file" style="display:none" accept=".json" onchange="importData(event)" />
+        </div>
+        <button class="btn btn-ink" onclick="saveSettings()">Save changes ✓</button>
       </div>
     </div>
   </div>
@@ -2646,7 +2762,7 @@
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(ev) {
+      reader.onload = function (ev) {
         try {
           const d = JSON.parse(ev.target.result);
           if (d.user && d.portfolio) {
@@ -2657,7 +2773,7 @@
             toast('Data imported successfully');
             document.getElementById('settings-modal').classList.remove('open');
           } else { toast('Invalid backup file'); }
-        } catch(err) { toast('Error parsing file'); }
+        } catch (err) { toast('Error parsing file'); }
       };
       reader.readAsText(file);
     }
@@ -2927,6 +3043,87 @@
       save(); toast('Case comp saved ✓'); setTimeout(() => nav('portfolio'), 700);
     }
 
+    // ── INDEXED_DB PROOFS VAULT ──────────────────────────────────────────────────
+    async function getDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open('PortflDB', 3);
+        req.onupgradeneeded = e => {
+          if (!e.target.result.objectStoreNames.contains('proofs')) {
+            e.target.result.createObjectStore('proofs');
+          }
+        };
+        req.onsuccess = e => resolve(e.target.result);
+        req.onerror = e => reject(e.target.error);
+      });
+    }
+
+    async function viewProof(proofId) {
+      const db = await getDB();
+      const tx = db.transaction('proofs', 'readonly');
+      const req = tx.objectStore('proofs').get(proofId);
+      req.onsuccess = () => {
+        const file = req.result;
+        if (file) {
+          const url = URL.createObjectURL(file);
+          document.getElementById('pm-frame').src = url;
+          document.getElementById('proof-modal').classList.add('open');
+        } else {
+          toast('Proof not found');
+        }
+      };
+      req.onerror = () => toast('Error loading proof');
+    }
+
+    async function removeProof(entryId, proofId) {
+      if (!confirm('Are you sure you want to delete this proof?')) return;
+      const entry = portfolio.find(p => p.id === entryId);
+      if (entry && entry.extra && entry.extra.proofs) {
+        entry.extra.proofs = entry.extra.proofs.filter(pf => pf.id !== proofId);
+        save();
+        const db = await getDB();
+        const tx = db.transaction('proofs', 'readwrite');
+        tx.objectStore('proofs').delete(proofId);
+        toast('Proof deleted ✓');
+        openDetail(entryId); // re-render modal
+      }
+    }
+
+    async function saveProject() {
+      const title = document.getElementById('project-title').value.trim();
+      const desc = document.getElementById('project-desc').value.trim();
+      if (!title || !desc) { toast('Please enter title and description'); return; }
+      const dateInput = document.getElementById('project-date-input').value;
+      const displayDate = dateInput ? new Date(dateInput).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : fd();
+      
+      const proofInput = document.getElementById('project-proofs');
+      const proofs = [];
+      try {
+        if (proofInput && proofInput.files.length > 0) {
+          const db = await getDB();
+          const tx = db.transaction('proofs', 'readwrite');
+          for (let i = 0; i < proofInput.files.length; i++) {
+            const file = proofInput.files[i];
+            const pid = 'pf_' + Date.now() + '_' + i;
+            tx.objectStore('proofs').put(file, pid);
+            proofs.push({ id: pid, name: file.name });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to save proofs to IDB:", err);
+      }
+
+      portfolio.push({
+        id: Date.now(), type: 'project', title, product: document.getElementById('project-product').value,
+        desc: desc, status: document.getElementById('project-status').value, date: displayDate,
+        extra: {
+          link: document.getElementById('project-link').value,
+          fullDate: dateInput,
+          proofs: proofs
+        }
+      });
+      save(); toast('Project saved ✓'); setTimeout(() => nav('portfolio'), 700);
+    }
+
     // ── RENDER ───────────────────────────────────────────────────────────────────
     // Sidebar "Add Work" nav — label + icon per sector, always all 4 pages
     const sectorNavItems = {
@@ -2935,36 +3132,42 @@
         { icon: '📋', label: 'PRD', page: 'new-prd' },
         { icon: '🧪', label: 'A/B Experiment', page: 'new-experiment' },
         { icon: '🏆', label: 'Case Competition', page: 'new-casecomp' },
+        { icon: '📂', label: 'Done Work / Project', page: 'new-project' },
       ],
       'Investment Banking': [
         { icon: '🏆', label: 'Deal / Case', page: 'new-casecomp' },
         { icon: '📋', label: 'Pitch / Memo Doc', page: 'new-prd' },
         { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' },
         { icon: '🧪', label: 'Model Experiment', page: 'new-experiment' },
+        { icon: '📂', label: 'Done Work / Project', page: 'new-project' },
       ],
       'Consulting': [
         { icon: '🏆', label: 'Case Competition', page: 'new-casecomp' },
         { icon: '📋', label: 'Strategy Doc', page: 'new-prd' },
         { icon: '🔍', label: 'Company Analysis', page: 'new-teardown' },
         { icon: '🧪', label: 'Framework Test', page: 'new-experiment' },
+        { icon: '📂', label: 'Done Work / Project', page: 'new-project' },
       ],
       'Equity Research': [
         { icon: '📋', label: 'Investment Memo', page: 'new-prd' },
         { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' },
         { icon: '🧪', label: 'Thesis Test', page: 'new-experiment' },
         { icon: '🏆', label: 'Stock Pitch Comp', page: 'new-casecomp' },
+        { icon: '📂', label: 'Done Work / Project', page: 'new-project' },
       ],
       'Software Engineering': [
         { icon: '🔍', label: 'Product Teardown', page: 'new-teardown' },
         { icon: '🧪', label: 'Experiment', page: 'new-experiment' },
         { icon: '📋', label: 'System Design Doc', page: 'new-prd' },
         { icon: '🏆', label: 'Build Challenge', page: 'new-casecomp' },
+        { icon: '📂', label: 'Done Work / Project', page: 'new-project' },
       ],
       'General Management': [
         { icon: '📋', label: 'Strategy Doc', page: 'new-prd' },
         { icon: '🏆', label: 'Case Competition', page: 'new-casecomp' },
         { icon: '🔍', label: 'Org / Product Analysis', page: 'new-teardown' },
         { icon: '🧪', label: 'Initiative Test', page: 'new-experiment' },
+        { icon: '📂', label: 'Done Work / Project', page: 'new-project' },
       ],
     };
 
@@ -2977,49 +3180,49 @@
     }
 
     const sectorActions = {
-      'Product Management': [{ icon: '🔍', label: 'Product Teardown', page: 'new-teardown', primary: true }, { icon: '📋', label: 'Write a PRD', page: 'new-prd' }, { icon: '🧪', label: 'A/B Experiment', page: 'new-experiment' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }],
-      'Investment Banking': [{ icon: '🏆', label: 'Case Comp', page: 'new-casecomp', primary: true }, { icon: '📋', label: 'Deal / Pitch Doc', page: 'new-prd' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🧪', label: 'Model Test', page: 'new-experiment' }],
-      'Consulting': [{ icon: '🏆', label: 'Case Comp', page: 'new-casecomp', primary: true }, { icon: '🔍', label: 'Company Analysis', page: 'new-teardown' }, { icon: '📋', label: 'Strategy Doc', page: 'new-prd' }, { icon: '🧪', label: 'Experiment', page: 'new-experiment' }],
-      'Equity Research': [{ icon: '📋', label: 'Investment Memo', page: 'new-prd', primary: true }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '🧪', label: 'Thesis Test', page: 'new-experiment' }],
-      'Software Engineering': [{ icon: '🔍', label: 'Product Teardown', page: 'new-teardown', primary: true }, { icon: '🧪', label: 'Experiment', page: 'new-experiment' }, { icon: '📋', label: 'System Design Doc', page: 'new-prd' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }],
-      'General Management': [{ icon: '📋', label: 'Strategy Doc', page: 'new-prd', primary: true }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🧪', label: 'Initiative Test', page: 'new-experiment' }],
+      'Product Management': [{ icon: '📂', label: 'Done Work / Project', page: 'new-project', primary: true }, { icon: '🔍', label: 'Product Teardown', page: 'new-teardown' }, { icon: '📋', label: 'Write a PRD', page: 'new-prd' }, { icon: '🧪', label: 'A/B Experiment', page: 'new-experiment' }],
+      'Investment Banking': [{ icon: '📂', label: 'Done Work / Project', page: 'new-project', primary: true }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '📋', label: 'Deal / Pitch Doc', page: 'new-prd' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }],
+      'Consulting': [{ icon: '📂', label: 'Done Work / Project', page: 'new-project', primary: true }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '🔍', label: 'Company Analysis', page: 'new-teardown' }, { icon: '📋', label: 'Strategy Doc', page: 'new-prd' }],
+      'Equity Research': [{ icon: '📂', label: 'Done Work / Project', page: 'new-project', primary: true }, { icon: '📋', label: 'Investment Memo', page: 'new-prd' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }],
+      'Software Engineering': [{ icon: '📂', label: 'Done Work / Project', page: 'new-project', primary: true }, { icon: '🔍', label: 'Product Teardown', page: 'new-teardown' }, { icon: '🧪', label: 'Experiment', page: 'new-experiment' }, { icon: '📋', label: 'System Design Doc', page: 'new-prd' }],
+      'General Management': [{ icon: '📂', label: 'Done Work / Project', page: 'new-project', primary: true }, { icon: '📋', label: 'Strategy Doc', page: 'new-prd' }, { icon: '🏆', label: 'Case Comp', page: 'new-casecomp' }, { icon: '🔍', label: 'Company Teardown', page: 'new-teardown' }],
     };
     const sectorNextSteps = {
       'Product Management': [
+        { label: 'Document finished work / project', sub: 'Showcase what you have built', page: 'new-project', type: 'project' },
         { label: 'Do your first product teardown', sub: 'Pick an app you use daily', page: 'new-teardown', type: 'teardown' },
         { label: 'Write a PRD', sub: 'Document a feature you would build', page: 'new-prd', type: 'prd' },
         { label: 'Run an A/B experiment', sub: 'Test a hypothesis with real users', page: 'new-experiment', type: 'experiment' },
-        { label: 'Enter a case competition', sub: 'Practice under pressure', page: 'new-casecomp', type: 'casecomp' },
       ],
       'Investment Banking': [
+        { label: 'Document finished work / project', sub: 'Showcase what you have built', page: 'new-project', type: 'project' },
         { label: 'Document a deal or case', sub: 'Model walkthrough or pitch deck', page: 'new-casecomp', type: 'casecomp' },
         { label: 'Write an investment memo', sub: 'Cover thesis, risks, and valuation', page: 'new-prd', type: 'prd' },
         { label: 'Tear down a public company', sub: 'Revenue model, moat, competitive position', page: 'new-teardown', type: 'teardown' },
-        { label: 'Enter a finance case comp', sub: 'Practice speed and structure', page: 'new-casecomp', type: 'casecomp' },
       ],
       'Consulting': [
+        { label: 'Document finished work / project', sub: 'Showcase what you have built', page: 'new-project', type: 'project' },
         { label: 'Enter your first case comp', sub: 'Structure and recommend under time pressure', page: 'new-casecomp', type: 'casecomp' },
         { label: 'Document a consulting project', sub: 'Problem, approach, recommendation', page: 'new-prd', type: 'prd' },
         { label: 'Tear down a company strategy', sub: 'Apply a framework — Porter, BCG matrix', page: 'new-teardown', type: 'teardown' },
-        { label: 'Log a structured experiment', sub: 'Test a recommendation hypothesis', page: 'new-experiment', type: 'experiment' },
       ],
       'Equity Research': [
+        { label: 'Document finished work / project', sub: 'Showcase what you have built', page: 'new-project', type: 'project' },
         { label: 'Write your first investment memo', sub: 'Bull/bear case with a price target', page: 'new-prd', type: 'prd' },
         { label: 'Tear down a listed company', sub: 'Business model, financials, moat', page: 'new-teardown', type: 'teardown' },
         { label: 'Test a thesis with data', sub: 'Track a prediction against outcome', page: 'new-experiment', type: 'experiment' },
-        { label: 'Enter a stock pitch competition', sub: 'Defend your view in front of a panel', page: 'new-casecomp', type: 'casecomp' },
       ],
       'Software Engineering': [
+        { label: 'Document finished work / project', sub: 'Showcase what you have built', page: 'new-project', type: 'project' },
         { label: 'Tear down a product you admire', sub: 'Architecture, UX, and tradeoffs', page: 'new-teardown', type: 'teardown' },
         { label: 'Document a system design', sub: 'Problem, approach, tradeoffs made', page: 'new-prd', type: 'prd' },
         { label: 'Run a real experiment', sub: 'A/B test or feature flag on a project', page: 'new-experiment', type: 'experiment' },
-        { label: 'Enter a build challenge', sub: 'Hackathon or product case competition', page: 'new-casecomp', type: 'casecomp' },
       ],
       'General Management': [
+        { label: 'Document finished work / project', sub: 'Showcase what you have built', page: 'new-project', type: 'project' },
         { label: 'Document a leadership initiative', sub: 'What you owned, drove, and measured', page: 'new-prd', type: 'prd' },
         { label: 'Enter a strategy case comp', sub: 'Show cross-functional thinking', page: 'new-casecomp', type: 'casecomp' },
         { label: 'Tear down an organisation or product', sub: 'Diagnose what works and what does not', page: 'new-teardown', type: 'teardown' },
-        { label: 'Log a decision experiment', sub: 'Hypothesis, action, and outcome', page: 'new-experiment', type: 'experiment' },
       ],
     };
 
@@ -3120,7 +3323,7 @@
     }
     function pieceCard(p, idx) {
       const delay = (typeof idx === 'number' ? Math.min(idx, 15) : 0) * 0.05;
-      const tl = { teardown: 'Teardown', prd: 'PRD', casecomp: 'Case Comp', experiment: 'Experiment' }[p.type];
+      const tl = { teardown: 'Teardown', prd: 'PRD', casecomp: 'Case Comp', experiment: 'Experiment', project: 'Project' }[p.type];
       const sl = { draft: 'Draft', inprogress: 'In Progress', published: 'Published' }[p.status];
       const sc = { draft: 'ps-draft', inprogress: 'ps-inprogress', published: 'ps-published' }[p.status];
       const e = p.extra || {};
@@ -3156,10 +3359,10 @@
   </div>`;
     }
     function updateComp() {
-      const c = { teardown: 0, prd: 0, casecomp: 0, experiment: 0 };
+      const c = { teardown: 0, prd: 0, casecomp: 0, experiment: 0, project: 0 };
       portfolio.forEach(p => { if (c[p.type] !== undefined) c[p.type]++; });
       const cfg = getSectorCfg();
-      const t = { teardown: cfg.kpis[0].target, prd: cfg.kpis[1].target, casecomp: cfg.kpis[2].target, experiment: cfg.kpis[3].target };
+      const t = { teardown: cfg.kpis[0].target, prd: cfg.kpis[1].target, casecomp: cfg.kpis[2].target, experiment: cfg.kpis[3].target, project: 1 };
       let s = 0, tot = 0; for (const k in t) { s += Math.min(c[k], t[k]); tot += t[k]; }
       const pct = Math.round((s / tot) * 100) || 0;
       document.getElementById('comp-bar').style.width = pct + '%';
@@ -3169,7 +3372,7 @@
     // ── MODAL ───────────────────────────────────────────────────────────────────
     function openDetail(id) {
       const p = portfolio.find(x => x.id === id); if (!p) return;
-      const tl = { teardown: 'Teardown', prd: 'PRD', casecomp: 'Case Comp', experiment: 'Experiment' }[p.type];
+      const tl = { teardown: 'Teardown', prd: 'PRD', casecomp: 'Case Comp', experiment: 'Experiment', project: 'Project' }[p.type];
       document.getElementById('m-badge').innerHTML = `<span class="pc-type pct-${p.type}">${tl}</span>`;
       document.getElementById('m-title').textContent = p.title;
       document.getElementById('m-meta').textContent = (p.product || '') + (p.product && p.date ? ' · ' : '') + p.date;
@@ -3191,6 +3394,23 @@
         if (e.metrics && e.metrics.length) body += `<div class="modal-section"><div class="modal-section-label">Supporting Metrics</div><div style="margin-top:4px">${e.metrics.map(m => `<span class="m-chip">${m}</span>`).join('')}</div></div>`;
         if (e.result) body += `<div class="modal-section"><div class="modal-section-label">Result</div><div class="modal-section-content">${e.result}</div></div>`;
         if (e.learnings) body += `<div class="modal-section"><div class="modal-section-label">Key Learnings</div><div class="modal-section-content">${e.learnings}</div></div>`;
+        if (e.link) body += `<div class="modal-section"><div class="modal-section-label">Link</div><div class="modal-section-content"><a href="${e.link}" target="_blank" style="color:var(--blue);text-decoration:none">${e.link}</a></div></div>`;
+        
+        if (e.proofs && e.proofs.length > 0) {
+          let proofsHtml = '<div class="modal-section"><div class="modal-section-label">Proofs / Documents</div><div style="display:flex;flex-direction:column;gap:8px;">';
+          for (const pf of e.proofs) {
+            proofsHtml += `
+            <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);padding:10px 14px;border-radius:8px;border:1px solid var(--border)">
+              <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:12px;">📁 ${pf.name}</span>
+              <div style="display:flex;gap:4px;">
+                <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px;" onclick="viewProof('${pf.id}')">View</button>
+                <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px;color:red;" onclick="removeProof(${p.id}, '${pf.id}')">Delete</button>
+              </div>
+            </div>`;
+          }
+          proofsHtml += '</div></div>';
+          body += proofsHtml;
+        }
       }
       document.getElementById('m-body').innerHTML = body || '<p style="color:var(--muted);font-size:13px">No additional details recorded.</p>';
       const delBtn = document.getElementById('m-del');
@@ -3222,6 +3442,13 @@
           }
         }, 3000);
         return;
+      }
+      const entryInfo = portfolio.find(p => p.id === id);
+      if (entryInfo && entryInfo.extra && entryInfo.extra.proofs) {
+        getDB().then(db => {
+          const tx = db.transaction('proofs', 'readwrite');
+          entryInfo.extra.proofs.forEach(pf => tx.objectStore('proofs').delete(pf.id));
+        }).catch(err => console.error("Failed to delete proofs from IDB", err));
       }
       portfolio = portfolio.filter(p => p.id !== id);
       save(); closeModal(); renderDashboard(); renderPortfolio(); toast('Entry deleted ✓');
@@ -3266,7 +3493,7 @@
     }
     // Close sidebar when navigating on mobile
     const origNav = nav;
-    nav = function(id) {
+    nav = function (id) {
       closeSidebar();
       origNav(id);
     };
@@ -3326,12 +3553,12 @@
     let deferredPrompt = null;
     // Track if already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                      || window.navigator.standalone === true;
+      || window.navigator.standalone === true;
 
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       deferredPrompt = e;
-      
+
       // Update manual buttons if they exist
       const manualBtn = document.getElementById('manual-install-btn');
       if (manualBtn) manualBtn.style.display = 'block';
@@ -3402,7 +3629,7 @@
     function handleHash() {
       const hash = location.hash.replace('#', '');
       if (hash && user) {
-        const validPages = ['dashboard', 'portfolio', 'new-teardown', 'new-prd', 'new-experiment', 'new-casecomp'];
+        const validPages = ['dashboard', 'portfolio', 'new-teardown', 'new-prd', 'new-experiment', 'new-casecomp', 'new-project'];
         if (validPages.includes(hash)) {
           nav(hash);
         }
