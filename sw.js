@@ -1,5 +1,5 @@
 // Portfl Service Worker v2 — Full offline-first PWA
-const CACHE_NAME = 'portfl-v2.1';
+const CACHE_NAME = 'portfl-v2.2';
 const STATIC_ASSETS = [
   './',
   './index.html',
